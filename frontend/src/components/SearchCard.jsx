@@ -128,7 +128,7 @@ export default function SearchCard({
         placeholder={placeholder}
         aria-autocomplete="list"
         aria-expanded={suggestions.length > 0}
-        style={{ width: "100%", padding: 8 }}
+        style={{ width: "99%", padding: 8, fontSize: 22 }}
       />
 
       {loading && <div style={{ position: "absolute", right: 8, top: 8 }}>⏳</div>}

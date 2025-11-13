@@ -17,6 +17,8 @@ class Card(SQLModel, table=True):
     image_url: str
     owner_id: Optional[int] = Field(default=None, foreign_key="user.id")
     owner: Optional[User] = Relationship(back_populates="cards")
+    quantity: int = Field(default=1, nullable=False)
+    intent: str = Field(default="have", nullable=False)
 
 class TradeOffer(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)

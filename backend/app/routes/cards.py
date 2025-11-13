@@ -26,6 +26,11 @@ def get_current_user(token: str = Depends(oauth2_scheme), session: Session = Dep
 @router.post("/", response_model=Card)
 def create_card(card: Card, user: User = Depends(get_current_user), session: Session = Depends(get_session)):
     card.owner_id = user.id
+    if card.intent not in ("have", "want"):
+        raise HTTPException(status_code=400, detail="intent must be 'have' or 'want'")
+    if card.quantity is None or card.quantity < 1:
+        card.quantity = 1
+
     session.add(card)
     session.commit()
     session.refresh(card)
