@@ -4,42 +4,41 @@ import * as React from "react";
 import { card } from "../../types";
 
 interface SearchCardProps {
-    value: string;
-    onChange?: (value: string) => void;
-    onSelect?: (card: card) => void;         // callback triggered when a card is selected
-    placeholder?: string;
-    minChars?: number;
-    maxResults?: number;
-    debounceMs?: number;
+  value: string;
+  onChange?: (value: string) => void;
+  onSelect?: (card: card) => void; // callback triggered when a card is selected
+  placeholder?: string;
+  minChars?: number;
+  maxResults?: number;
+  debounceMs?: number;
 }
 
 interface ScryfallCard {
-    id: string;
-    name: string;
-    set_name?: string;
-    set?: string;
+  id: string;
+  name: string;
+  set_name?: string;
+  set?: string;
+  image_uris?: {
+    small?: string;
+  };
+  card_faces?: Array<{
+    name?: string;
     image_uris?: {
-        small?: string;
+      small?: string;
     };
-    card_faces?: Array<{
-        name?: string;
-        image_uris?: {
-            small?: string;
-        };
-    }>;
-    border_color?: string;
-    promo?: boolean;
-    variation?: boolean;
-    frame_effects?: string[];
-    foil?: boolean;
-    nonfoil?: boolean;
+  }>;
+  border_color?: string;
+  promo?: boolean;
+  variation?: boolean;
+  frame_effects?: string[];
+  foil?: boolean;
+  nonfoil?: boolean;
 }
 
-
 export default function SearchCard({
-  value,            
-  onChange,         
-  onSelect,         // callback triggered when a card is selected
+  value,
+  onChange,
+  onSelect, // callback triggered when a card is selected
   placeholder = "Search for a card...",
   minChars = 3,
   maxResults = 8,
@@ -130,10 +129,14 @@ export default function SearchCard({
     if (scryfallCard.promo) parts.push("Promo");
     if (scryfallCard.variation) parts.push("Variant");
     if (Array.isArray(scryfallCard.frame_effects)) {
-      if (scryfallCard.frame_effects.includes("extendedart") || scryfallCard.frame_effects.includes("extended art")) {
+      if (
+        scryfallCard.frame_effects.includes("extendedart") ||
+        scryfallCard.frame_effects.includes("extended art")
+      ) {
         parts.push("Extended Art");
       }
-      if (scryfallCard.frame_effects.includes("etched")) parts.push("Etched Foil");
+      if (scryfallCard.frame_effects.includes("etched"))
+        parts.push("Etched Foil");
     }
     if (scryfallCard.foil === true) parts.push("Foil");
     else if (scryfallCard.nonfoil === true) parts.push("Nonfoil");
@@ -154,7 +157,10 @@ export default function SearchCard({
   }, []);
 
   return (
-    <div ref={containerRef} style={{ width: "90%", padding: 16, position: "relative" }}>
+    <div
+      ref={containerRef}
+      style={{ width: "90%", padding: 16, position: "relative" }}
+    >
       <input
         value={value}
         onChange={handleInput}
@@ -165,7 +171,9 @@ export default function SearchCard({
         style={{ width: "99%", padding: 8, fontSize: 22 }}
       />
 
-      {loading && <div style={{ position: "absolute", right: 8, top: 8 }}>⏳</div>}
+      {loading && (
+        <div style={{ position: "absolute", right: 8, top: 8 }}>⏳</div>
+      )}
 
       {suggestions.length > 0 && (
         <div
@@ -186,9 +194,7 @@ export default function SearchCard({
             const cardName = s.name || s.card_faces?.[0]?.name || "Unknown";
             const setName = s.set_name || s.set || "";
             const img =
-              s.image_uris?.small ||
-              s.card_faces?.[0]?.image_uris?.small ||
-              "";
+              s.image_uris?.small || s.card_faces?.[0]?.image_uris?.small || "";
             const printing = makePrintDescription(s);
             const isActive = idx === activeIndex;
 
@@ -216,13 +222,45 @@ export default function SearchCard({
                   <img
                     src={img}
                     alt={cardName}
-                    style={{ width: 120, height: 180, objectFit: "cover", borderRadius: 4 }}
+                    style={{
+                      width: 120,
+                      height: 180,
+                      objectFit: "cover",
+                      borderRadius: 4,
+                    }}
                   />
                 )}
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 600 , fontStyle: "italic", fontSize: 35 ,color: "#666" }}>{cardName}</div>
-                  <div style={{ fontWeight: 600 , fontSize: 22, fontStyle: "italic", color: "#666" }}>{setName}</div>
-                  <div style={{ fontWeight: 600 , fontSize: 22, fontStyle: "italic", color: "#666" }}>{printing}</div>
+                  <div
+                    style={{
+                      fontWeight: 600,
+                      fontStyle: "italic",
+                      fontSize: 35,
+                      color: "#666",
+                    }}
+                  >
+                    {cardName}
+                  </div>
+                  <div
+                    style={{
+                      fontWeight: 600,
+                      fontSize: 22,
+                      fontStyle: "italic",
+                      color: "#666",
+                    }}
+                  >
+                    {setName}
+                  </div>
+                  <div
+                    style={{
+                      fontWeight: 600,
+                      fontSize: 22,
+                      fontStyle: "italic",
+                      color: "#666",
+                    }}
+                  >
+                    {printing}
+                  </div>
                 </div>
               </div>
             );

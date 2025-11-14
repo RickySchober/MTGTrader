@@ -1,11 +1,11 @@
 import * as React from "react";
 
 interface ToggleSwitchProps {
-    value?: boolean;
-    onChange?: (value: boolean) => void;
-    leftLabel?: string;
-    rightLabel?: string;
-    id?: string;
+  value?: boolean;
+  onChange?: (value: boolean) => void;
+  leftLabel?: string;
+  rightLabel?: string;
+  id?: string;
 }
 
 const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
@@ -28,7 +28,10 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
         role="switch"
         aria-checked={!!value}
         onClick={() => onChange(!value)}
-        onKeyDown={(e) => { if (e.key === "ArrowLeft") onChange(false); if (e.key === "ArrowRight") onChange(true); }}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowLeft") onChange(false);
+          if (e.key === "ArrowRight") onChange(true);
+        }}
         style={{
           width,
           height,
@@ -42,9 +45,43 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
           overflow: "hidden",
         }}
       >
-        <div style={{ position: "relative", zIndex: 2, width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 13, fontWeight: 600 }}>
-          <span style={{ fontWeight: 550 , fontSize: 20, width: "50%", textAlign: "center", color: value ? "var(--text)" : "rgba(8, 183, 241, 1)", pointerEvents: "none" }}>{leftLabel}</span>
-          <span style={{ fontWeight: 550 , fontSize: 20, width: "50%", textAlign: "center", color: value ? "rgba(8, 183, 241, 1)": "var(--text)" , pointerEvents: "none" }}>{rightLabel}</span>
+        <div
+          style={{
+            position: "relative",
+            zIndex: 2,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            fontSize: 13,
+            fontWeight: 600,
+          }}
+        >
+          <span
+            style={{
+              fontWeight: 550,
+              fontSize: 20,
+              width: "50%",
+              textAlign: "center",
+              color: value ? "var(--text)" : "rgba(8, 183, 241, 1)",
+              pointerEvents: "none",
+            }}
+          >
+            {leftLabel}
+          </span>
+          <span
+            style={{
+              fontWeight: 550,
+              fontSize: 20,
+              width: "50%",
+              textAlign: "center",
+              color: value ? "rgba(8, 183, 241, 1)" : "var(--text)",
+              pointerEvents: "none",
+            }}
+          >
+            {rightLabel}
+          </span>
         </div>
 
         {/* sliding white box knob */}
@@ -65,10 +102,9 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
             paddingLeft: 8,
             paddingRight: 8,
           }}
-        >
-        </div>
+        ></div>
       </button>
     </div>
   );
-}
+};
 export default ToggleSwitch;

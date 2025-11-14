@@ -26,5 +26,5 @@ const UserProfilePage: React.FC = () => {
       <CardList cards={cards} />
     </div>
   );
-}
+};
 export default UserProfilePage;

@@ -69,65 +69,114 @@ const LoginPage: React.FC = () => {
   }
 
   return (
-    <div className="app-container" style={{ minHeight: '72vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div className="card" style={{ width: '100%', maxWidth: 600 }}>
-        <h2 style={{ fontSize: '3.5rem', fontWeight: 700, marginBottom: 12, textAlign: 'center' }}>
-          {isRegister ? 'Create an account' : 'Login'}
+    <div
+      className="app-container"
+      style={{
+        minHeight: "72vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div className="card" style={{ width: "100%", maxWidth: 600 }}>
+        <h2
+          style={{
+            fontSize: "3.5rem",
+            fontWeight: 700,
+            marginBottom: 12,
+            textAlign: "center",
+          }}
+        >
+          {isRegister ? "Create an account" : "Login"}
         </h2>
 
         {isRegister ? (
-          <form onSubmit={tryRegister} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <form
+            onSubmit={tryRegister}
+            style={{ display: "flex", flexDirection: "column", gap: 12 }}
+          >
             <input
               type="text"
               placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              style={{ padding: '12px', fontSize: '1rem', borderRadius: 6 }}
+              style={{ padding: "12px", fontSize: "1rem", borderRadius: 6 }}
             />
             <input
               type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              style={{ padding: '12px', fontSize: '1rem', borderRadius: 6 }}
+              style={{ padding: "12px", fontSize: "1rem", borderRadius: 6 }}
             />
             <input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              style={{ padding: '12px', fontSize: '1rem', borderRadius: 6 }}
+              style={{ padding: "12px", fontSize: "1rem", borderRadius: 6 }}
             />
-            <button type="submit" className="primary" style={{ padding: '10px 14px', fontSize: '1rem' }}>
+            <button
+              type="submit"
+              className="primary"
+              style={{ padding: "10px 14px", fontSize: "1rem" }}
+            >
               Register
             </button>
-            <div style={{ textAlign: 'center', fontSize: '0.95rem' }}>
-              <button type="button" onClick={() => setIsRegister(false)} style={{ color: 'var(--accent)', textDecoration: 'underline', background: 'transparent', border: 'none', cursor: 'pointer' }}>
+            <div style={{ textAlign: "center", fontSize: "0.95rem" }}>
+              <button
+                type="button"
+                onClick={() => setIsRegister(false)}
+                style={{
+                  color: "var(--accent)",
+                  textDecoration: "underline",
+                  background: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
                 Already have an account? Login
               </button>
             </div>
           </form>
         ) : (
-          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <form
+            onSubmit={handleLogin}
+            style={{ display: "flex", flexDirection: "column", gap: 12 }}
+          >
             <input
               type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              style={{ padding: '12px', fontSize: '1rem', borderRadius: 6 }}
+              style={{ padding: "12px", fontSize: "1rem", borderRadius: 6 }}
             />
             <input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              style={{ padding: '12px', fontSize: '1rem', borderRadius: 6 }}
+              style={{ padding: "12px", fontSize: "1rem", borderRadius: 6 }}
             />
-            <button type="submit" className="primary" style={{ padding: '10px 14px', fontSize: '1rem' }}>
+            <button
+              type="submit"
+              className="primary"
+              style={{ padding: "10px 14px", fontSize: "1rem" }}
+            >
               Login
             </button>
-            <div style={{ textAlign: 'center', fontSize: '0.95rem' }}>
-              <button type="button" onClick={() => setIsRegister(true)} style={{ color: 'var(--accent)', textDecoration: 'underline', background: 'transparent', border: 'none', cursor: 'pointer' }}>
+            <div style={{ textAlign: "center", fontSize: "0.95rem" }}>
+              <button
+                type="button"
+                onClick={() => setIsRegister(true)}
+                style={{
+                  color: "var(--accent)",
+                  textDecoration: "underline",
+                  background: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
                 Create an account
               </button>
             </div>
@@ -136,5 +185,5 @@ const LoginPage: React.FC = () => {
       </div>
     </div>
   );
-}
+};
 export default LoginPage;

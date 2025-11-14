@@ -23,22 +23,24 @@ const ProfilePage: React.FC = () => {
   const [showSearch, setShowSearch] = useState<boolean>(true);
   const [listText, setListText] = useState<string>("");
   const [form, setForm] = useState<card | null>(null);
-  
-  const sortedCards = [...cards].filter(card => card.intent === (haves ? "have" : "want")).sort((a, b) => {
-    const dir = ascending ? 1 : -1;
-    switch (sortOption) {
-      case "price":
-        return (a.price - b.price) * dir;
-      case "dateSort":
-        return a.id - b.id * dir;
-      case "nameSort":
-        a.name.localeCompare(b.name) * dir;
-      case "setName":
-        return a.set_name.localeCompare(b.set_name) * dir;
-      default:
-        return a.name.localeCompare(b.name) * dir;
-    }
-  });
+
+  const sortedCards = [...cards]
+    .filter((card) => card.intent === (haves ? "have" : "want"))
+    .sort((a, b) => {
+      const dir = ascending ? 1 : -1;
+      switch (sortOption) {
+        case "price":
+          return (a.price - b.price) * dir;
+        case "dateSort":
+          return a.id - b.id * dir;
+        case "nameSort":
+          a.name.localeCompare(b.name) * dir;
+        case "setName":
+          return a.set_name.localeCompare(b.set_name) * dir;
+        default:
+          return a.name.localeCompare(b.name) * dir;
+      }
+    });
   async function fetchMyCards() {
     const res = await api.get("/auth/me");
     setCards(res.data);
@@ -65,7 +67,7 @@ const ProfilePage: React.FC = () => {
   }
   async function updateRecent() {
     for (let i = 0; i < recentAdded.length; i++) {
-      if(recentAdded[i].quantity <=0){
+      if (recentAdded[i].quantity <= 0) {
         recentAdded.splice(i, 1);
         i--;
       }
@@ -83,84 +85,134 @@ const ProfilePage: React.FC = () => {
   const heroHeight = 1000; // px - the background image area height
 
   return (
-    <div style={{ position: "relative"}}>
-      <div >
-          <NavBar
-            search={searchRedirect}
-            setSearch={setSearchRedirect}
-            onSelect={handleSelectCard}
-            placeholder="Search for a card..."
-          />
+    <div style={{ position: "relative" }}>
+      <div>
+        <NavBar
+          search={searchRedirect}
+          setSearch={setSearchRedirect}
+          onSelect={handleSelectCard}
+          placeholder="Search for a card..."
+        />
       </div>
-        
-      <Backsplash heroHeight={heroHeight} bgArt={bgArt}>
-      <div style={{
-        position: 'relative',
-        display: "flex",
-        justifyContent: "left",
-        alignItems: "center",
-        gap: 12,
-      }}>
-        <ToggleSwitch
-          value={haves}
-          onChange={setHaves}
-          leftLabel="Wants"
-          rightLabel="Haves"
-          id="profile-type-toggle"
-        />
-        <ToggleSwitch
-          value={add}
-          onChange={setAdd}
-          leftLabel="View"
-          rightLabel="Add"
-          id="profile-view-toggle"
-        />
-        <SortDropdown 
-          sortField={sortOption} 
-          setSortField={setSortOption} 
-          ascending={ascending}
-          setAscending={setAscending}
-        />
 
-        {add &&  <button onClick={() => {setShowListInput(s => false);setShowSearch(s => true) }}>Add by Search</button> }
-        {add &&  <button onClick={() => {setShowListInput(s => true);setShowSearch(s => false) } }>Add by List</button> }
-        {add &&  <button >Add by Photo</button> }
-        
-      </div>
-      {showSearch&&add && (
-        <SearchCard
-          value={search}
-          onChange={setSearch}
-          onSelect={onSelect}
-          placeholder="Search for a card to add..."
-      />
-      )}
-      {showListInput&&add && (
-        <div style={{ marginTop: 12 }}>
-          <div style={{ marginBottom: 6, fontWeight: 600 }}>Paste list (one card per line):</div>
-          <textarea
-            value={listText}
-            onChange={(e) => setListText(e.target.value)}
-            placeholder={`Example:\n1 Lightning Bolt (STA) \n1x Artist's Talent (BLB)`}
-            rows={8}
-            style={{ width: "60%", padding: 8, fontSize: 14, borderRadius: 6, border: "1px solid rgba(255,255,255,0.06)", background: "transparent", color: "var(--text)" }}
+      <Backsplash heroHeight={heroHeight} bgArt={bgArt}>
+        <div
+          style={{
+            position: "relative",
+            display: "flex",
+            justifyContent: "left",
+            alignItems: "center",
+            gap: 12,
+          }}
+        >
+          <ToggleSwitch
+            value={haves}
+            onChange={setHaves}
+            leftLabel="Wants"
+            rightLabel="Haves"
+            id="profile-type-toggle"
           />
-          <div style={{ marginTop: 8, display: "flex", gap: 8 }}>
-            <button onClick={async (e) => { e.preventDefault(); await parseAndAddList(); }}>Parse & Add</button>
-            <button onClick={() => { setListText(""); }}>Clear</button>
+          <ToggleSwitch
+            value={add}
+            onChange={setAdd}
+            leftLabel="View"
+            rightLabel="Add"
+            id="profile-view-toggle"
+          />
+          <SortDropdown
+            sortField={sortOption}
+            setSortField={setSortOption}
+            ascending={ascending}
+            setAscending={setAscending}
+          />
+
+          {add && (
+            <button
+              onClick={() => {
+                setShowListInput((s) => false);
+                setShowSearch((s) => true);
+              }}
+            >
+              Add by Search
+            </button>
+          )}
+          {add && (
+            <button
+              onClick={() => {
+                setShowListInput((s) => true);
+                setShowSearch((s) => false);
+              }}
+            >
+              Add by List
+            </button>
+          )}
+          {add && <button>Add by Photo</button>}
+        </div>
+        {showSearch && add && (
+          <SearchCard
+            value={search}
+            onChange={setSearch}
+            onSelect={onSelect}
+            placeholder="Search for a card to add..."
+          />
+        )}
+        {showListInput && add && (
+          <div style={{ marginTop: 12 }}>
+            <div style={{ marginBottom: 6, fontWeight: 600 }}>
+              Paste list (one card per line):
+            </div>
+            <textarea
+              value={listText}
+              onChange={(e) => setListText(e.target.value)}
+              placeholder={`Example:\n1 Lightning Bolt (STA) \n1x Artist's Talent (BLB)`}
+              rows={8}
+              style={{
+                width: "60%",
+                padding: 8,
+                fontSize: 14,
+                borderRadius: 6,
+                border: "1px solid rgba(255,255,255,0.06)",
+                background: "transparent",
+                color: "var(--text)",
+              }}
+            />
+            <div style={{ marginTop: 8, display: "flex", gap: 8 }}>
+              <button
+                onClick={async (e) => {
+                  e.preventDefault();
+                  await parseAndAddList();
+                }}
+              >
+                Parse & Add
+              </button>
+              <button
+                onClick={() => {
+                  setListText("");
+                }}
+              >
+                Clear
+              </button>
+            </div>
           </div>
-        </div>
-      )}
-      {add && recentAdded.length > 0 && (
-        <div style={{ marginTop: 18 }}>
-          <CardList cards={recentAdded} triggerUpdate={updateRecent} modifiable={true} />
-        </div>
-      )}
-      {!add && (
-        <div style={{ marginTop: 18 }}>
-          <CardList cards={sortedCards} triggerUpdate={fetchMyCards} modifiable={true} />
-        </div>
-      )}
+        )}
+        {add && recentAdded.length > 0 && (
+          <div style={{ marginTop: 18 }}>
+            <CardList
+              cards={recentAdded}
+              triggerUpdate={updateRecent}
+              modifiable={true}
+            />
+          </div>
+        )}
+        {!add && (
+          <div style={{ marginTop: 18 }}>
+            <CardList
+              cards={sortedCards}
+              triggerUpdate={fetchMyCards}
+              modifiable={true}
+            />
+          </div>
+        )}
       </Backsplash>
     </div>
   );
@@ -171,7 +223,10 @@ const ProfilePage: React.FC = () => {
       return;
     }
 
-    const lines = listText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    const lines = listText
+      .split(/\r?\n/)
+      .map((l) => l.trim())
+      .filter(Boolean);
     if (!lines.length) {
       alert("No card lines found.");
       return;
@@ -180,7 +235,9 @@ const ProfilePage: React.FC = () => {
     // helper to parse lines of the exact required format:
     // Quantity, name, set identifier in parentheses. Lines without quantity or without a set are ignored.
     // Examples accepted: "1x Umara Wizard (ZNR)", "2 Lightning Bolt (M21)"; trailing text after the ) is ignored.
-    function parseLine(line: string): { qty: number; name: string; setId: string } | null {
+    function parseLine(
+      line: string
+    ): { qty: number; name: string; setId: string } | null {
       const m = line.match(/^\s*(\d+)\s*x?\s+(.+?)\s*\(([^)]+)\)/i);
       if (!m) return null; // ignore lines that don't match the required format
       const qty = parseInt(m[1], 10);
@@ -211,9 +268,11 @@ const ProfilePage: React.FC = () => {
           // fallback: fuzzy by name and set
           const fuzzyUrl = `https://api.scryfall.com/cards/search?q=${encodeURIComponent(`${name} set:${setId}`)}`;
           res = await fetch(fuzzyUrl);
-          if (!res.ok) throw new Error(`Scryfall lookup failed for ${name} (${setId})`);
+          if (!res.ok)
+            throw new Error(`Scryfall lookup failed for ${name} (${setId})`);
           const searchResult = await res.json();
-          if (!searchResult.data || searchResult.data.length === 0) throw new Error(`No results for ${name} (${setId})`);
+          if (!searchResult.data || searchResult.data.length === 0)
+            throw new Error(`No results for ${name} (${setId})`);
           card = searchResult.data[0];
         } else {
           card = await res.json();
@@ -224,7 +283,10 @@ const ProfilePage: React.FC = () => {
           set_name: card.set_name || card.set || "",
           rarity: card.rarity || "",
           price: card.prices?.usd ? parseFloat(card.prices.usd) : 0,
-          image_url: card.image_uris?.normal || card.card_faces?.[0]?.image_uris?.normal || "",
+          image_url:
+            card.image_uris?.normal ||
+            card.card_faces?.[0]?.image_uris?.normal ||
+            "",
           quantity: qty,
           intent: haves ? "have" : "want",
         };
@@ -242,13 +304,13 @@ const ProfilePage: React.FC = () => {
         failed += 1;
       }
     }
-        if (newlyAdded.length) {
-          setRecentAdded((s) => [...newlyAdded, ...s]);
-        }
+    if (newlyAdded.length) {
+      setRecentAdded((s) => [...newlyAdded, ...s]);
+    }
 
-        await fetchMyCards();
-        setListText("");
-        alert(`Added ${added} cards. ${failed ? `${failed} failed.` : ""}`);
+    await fetchMyCards();
+    setListText("");
+    alert(`Added ${added} cards. ${failed ? `${failed} failed.` : ""}`);
   }
-}
+};
 export default ProfilePage;

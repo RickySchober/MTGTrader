@@ -60,40 +60,40 @@ const SearchPage: React.FC = () => {
   }, [searchParams]);
   return (
     <>
-      <NavBar  
-      search={search}
-      setSearch={setSearch}
-      onSelect={handleSearch}
-      placeholder="Search for a card..."
+      <NavBar
+        search={search}
+        setSearch={setSearch}
+        onSelect={handleSearch}
+        placeholder="Search for a card..."
       />
-      <Backsplash bgArt={bgArt} heroHeight={1000} >
-      {/* ─── FILTER BAR ──────────────────────────── */}
-      <section style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "flex-start",
-        gap: 12,
-      }}>
-        <SortDropdown 
-          sortField={sortOption} 
-          setSortField={setSortOption} 
-          ascending={ascending}
-          setAscending={setAscending}
-        />
-      </section>
+      <Backsplash bgArt={bgArt} heroHeight={1000}>
+        {/* ─── FILTER BAR ──────────────────────────── */}
+        <section
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            gap: 12,
+          }}
+        >
+          <SortDropdown
+            sortField={sortOption}
+            setSortField={setSortOption}
+            ascending={ascending}
+            setAscending={setAscending}
+          />
+        </section>
 
-      {/* ─── RESULTS ─────────────────────────────── */}
-      <main>
-        {results.length > 0 ? (
-          <CardList cards={sortedResults} onSelect={handleSelectCard}/>
-        ) : (
-          <p >
-            No results yet. Try searching for a card name.
-          </p>
-        )}
-      </main>
+        {/* ─── RESULTS ─────────────────────────────── */}
+        <main>
+          {results.length > 0 ? (
+            <CardList cards={sortedResults} onSelect={handleSelectCard} />
+          ) : (
+            <p>No results yet. Try searching for a card name.</p>
+          )}
+        </main>
       </Backsplash>
     </>
   );
-}
+};
 export default SearchPage;

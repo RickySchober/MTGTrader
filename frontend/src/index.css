@@ -1,3 +1,4 @@
+@import "tailwindcss";
 :root {
   /* Typography */
   --font-sans: system-ui, Avenir, Helvetica, Arial, sans-serif;

@@ -9,9 +9,14 @@ interface CardListProps {
   modifiable?: boolean;
 }
 
-const CardList: React.FC<CardListProps> = ({ cards, onSelect, triggerUpdate, modifiable = false }) => {
+const CardList: React.FC<CardListProps> = ({
+  cards,
+  onSelect,
+  triggerUpdate,
+  modifiable = false,
+}) => {
   if (!cards || !cards.length) return <p>No cards found.</p>;
-  function handleClick(card){
+  function handleClick(card) {
     onSelect?.(card);
   }
   return (
@@ -21,13 +26,18 @@ const CardList: React.FC<CardListProps> = ({ cards, onSelect, triggerUpdate, mod
         gridTemplateColumns: "repeat(4, 1fr)",
         gap: "10px",
         alignItems: "start",
-      }}>
+      }}
+    >
       {cards.map((card) => (
         <div key={card.id} onClick={() => handleClick(card)}>
-          <CardItem card={card} triggerUpdate={triggerUpdate} modifiable={modifiable}/>
+          <CardItem
+            card={card}
+            triggerUpdate={triggerUpdate}
+            modifiable={modifiable}
+          />
         </div>
       ))}
     </div>
   );
-}
+};
 export default CardList;
