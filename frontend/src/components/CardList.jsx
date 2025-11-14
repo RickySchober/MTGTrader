@@ -1,12 +1,11 @@
 import CardItem from "./CardItem";
-export default function CardList({ cards, onSelect }) {
+
+export default function CardList({ cards, onSelect, triggerUpdate, modifiable = false}) {
   if (!cards || !cards.length) return <p>No cards found.</p>;
   function handleClick(card){
     onSelect?.(card);
   }
   return (
-    
-
     <div
       style={{
         display: "grid",
@@ -16,7 +15,7 @@ export default function CardList({ cards, onSelect }) {
       }}>
       {cards.map((card) => (
         <div key={card.id} onClick={() => handleClick(card)}>
-          <CardItem card={card} />
+          <CardItem card={card} triggerUpdate={triggerUpdate} modifiable={modifiable}/>
         </div>
       ))}
     </div>

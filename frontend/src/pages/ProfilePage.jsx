@@ -1,15 +1,22 @@
 import { useState, useEffect } from "react";
 import api from "../api/client";
 import CardList from "../components/CardList";
+import SearchCard from "../components/SearchCard";
+import SortDropdown from "../components/SortDropdown";
 import NavBar from "../components/NavBar";
 import ToggleSwitch from "../components/ToggleSwitch";
 import bgArt from "../assets/Dragons-of-Tarkir-Gudul-Lurker-MtG.jpg";
 export default function ProfilePage() {
   const [cards, setCards] = useState([]);
+  const [searchRedirect, setSearchRedirect] = useState("");
   const [search, setSearch] = useState("");
-  const [add, setAdd] = useState(false);
-  const [haves, setHaves] = useState(false);
+  const [add, setAdd] = useState(false); // toggle state between viewing and adding cards
+  const [haves, setHaves] = useState(false); // toggle state between wants and haves
+  const [recentAdded, setRecentAdded] = useState([]); // track recently added cards during add session
   const [showListInput, setShowListInput] = useState(false);
+  const [sortOption, setSortOption] = useState("newest");
+  const [ascending, setAscending] = useState(true);
+  const [showSearch, setShowSearch] = useState(true);
   const [listText, setListText] = useState("");
   const [form, setForm] = useState({
     name: "",
@@ -21,25 +28,41 @@ export default function ProfilePage() {
     intent: haves ? "have" : "want",
   });
   
+  const sortedCards = [...cards].filter(card => card.intent === (haves ? "have" : "want")).sort((a, b) => {
+    const dir = ascending ? 1 : -1;
+    switch (sortOption) {
+      case "price":
+        return (a.price - b.price) * dir;
+      case "dateSort":
+        return a.id - b.id * dir;
+      case "nameSort":
+        a.name.localeCompare(b.name) * dir;
+      case "setName":
+        return a.set_name.localeCompare(b.set_name) * dir;
+      default:
+        return a.name.localeCompare(b.name) * dir;
+    }
+  });
   async function fetchMyCards() {
     const res = await api.get("/auth/me");
     setCards(res.data);
   }
 
-  async function addCard(e) {
-    e.preventDefault();
+  async function addCard() {
     try {
-      await api.post("/cards/", form);
-      fetchMyCards();
+      const res = await api.post("/cards/", form);
+      await fetchMyCards();
+      return res.data;
     } catch (err) {
       alert("Failed to add card");
+      return null;
     }
   }
 
   useEffect(() => {
     fetchMyCards();
   }, []);
- // Called when an autocomplete suggestion is chosen
+  
   function handleSelectCard(card) {
     setForm({
       name: card.name,
@@ -50,17 +73,33 @@ export default function ProfilePage() {
       quantity: 1,
       intent: (haves ? "have" : "want"),
     });
-    // keep the search text in sync with selected card name
     setSearch(card.name);
+  }
+  async function updateRecent() {
+    for (let i = 0; i < recentAdded.length; i++) {
+      if(recentAdded[i].quantity <=0){
+        recentAdded.splice(i, 1);
+        i--;
+      }
+    }
+    setRecentAdded([...recentAdded]);
+  }
+  async function onSelect(card) {
+    handleSelectCard(card);
+    const created = await addCard();
+    if (created) {
+      setRecentAdded((s) => [created, ...s]);
+    }
+    setSearch("");
   }
   const heroHeight = 1000; // px - the background image area height
 
   return (
     <div style={{ position: "relative"}}>
-      <div style={{ padding: 12 }}>
+      <div >
           <NavBar
-            search={search}
-            setSearch={setSearch}
+            search={searchRedirect}
+            setSearch={setSearchRedirect}
             onSelect={handleSelectCard}
             placeholder="Search for a card..."
           />
@@ -114,12 +153,26 @@ export default function ProfilePage() {
           id="profile-view-toggle"
           size="md"
         />
-        {add &&  <button onClick={addCard}>Add Card</button> }
-        {add &&  <button onClick={() => setShowListInput(s => !s)}>Add by List</button> }
-        {add &&  <button onClick={addCard}>Add by Photo</button> }
+        <SortDropdown 
+          sortField={sortOption} 
+          setSortField={setSortOption} 
+          ascending={ascending}
+          setAscending={setAscending}
+        />
+
+        {add &&  <button onClick={() => {setShowListInput(s => false);setShowSearch(s => true) }}>Add by Search</button> }
+        {add &&  <button onClick={() => {setShowListInput(s => true);setShowSearch(s => false) } }>Add by List</button> }
+        {add &&  <button >Add by Photo</button> }
         
       </div>
-
+      {showSearch&&add && (
+        <SearchCard
+          value={search}
+          onChange={setSearch}
+          onSelect={onSelect}
+          placeholder="Search for a card to add..."
+      />
+      )}
       {showListInput&&add && (
         <div style={{ marginTop: 12 }}>
           <div style={{ marginBottom: 6, fontWeight: 600 }}>Paste list (one card per line):</div>
@@ -132,13 +185,18 @@ export default function ProfilePage() {
           />
           <div style={{ marginTop: 8, display: "flex", gap: 8 }}>
             <button onClick={async (e) => { e.preventDefault(); await parseAndAddList(); }}>Parse & Add</button>
-            <button onClick={() => { setListText(""); setShowListInput(false); }}>Cancel</button>
+            <button onClick={() => { setListText(""); }}>Clear</button>
           </div>
+        </div>
+      )}
+      {add && recentAdded.length > 0 && (
+        <div style={{ marginTop: 18 }}>
+          <CardList cards={recentAdded} triggerUpdate={updateRecent} modifiable={true} />
         </div>
       )}
       {!add && (
         <div style={{ marginTop: 18 }}>
-          <CardList cards={cards.filter(card => card.intent === (haves ? "have" : "want"))} />
+          <CardList cards={sortedCards} triggerUpdate={fetchMyCards} modifiable={true} />
         </div>
       )}
       </div>
@@ -173,6 +231,7 @@ export default function ProfilePage() {
     let failed = 0;
     let ignored = 0;
 
+    const newlyAdded = [];
     for (const raw of lines) {
       const parsed = parseLine(raw);
       if (!parsed) {
@@ -208,17 +267,25 @@ export default function ProfilePage() {
           intent: haves ? "have" : "want",
         };
 
-        await api.post("/cards/", payload);
-        added += 1;
+        try {
+          const res = await api.post("/cards/", payload);
+          if (res?.data) newlyAdded.push(res.data);
+          added += 1;
+        } catch (err) {
+          console.error("Failed to add line:", raw, err);
+          failed += 1;
+        }
       } catch (err) {
         console.error("Failed to add line:", raw, err);
         failed += 1;
       }
     }
+        if (newlyAdded.length) {
+          setRecentAdded((s) => [...newlyAdded, ...s]);
+        }
 
-    await fetchMyCards();
-    setListText("");
-    setShowListInput(false);
-    alert(`Added ${added} cards. ${failed ? `${failed} failed.` : ""}`);
+        await fetchMyCards();
+        setListText("");
+        alert(`Added ${added} cards. ${failed ? `${failed} failed.` : ""}`);
   }
 }

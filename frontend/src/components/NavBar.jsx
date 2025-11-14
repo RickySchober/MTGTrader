@@ -1,6 +1,4 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import api from "../api/client";
+import { useNavigate, useLocation } from "react-router-dom";
 import SearchCard from "./SearchCard";
 import icon from "/favicon.png";
 
@@ -14,12 +12,25 @@ export default function NavBar ({ search, setSearch, onSelect, placeholder = "Se
         localStorage.removeItem("token");
         navigate("/login");
     }
+    const location = useLocation();
+
+    function handleSearchSelection(card) {
+        if (location.pathname === "/search") {
+            setSearch?.(card?.name || "");
+            if (typeof onSelect === "function") onSelect(card);
+            return;
+        }
+        const q = encodeURIComponent(card?.name || "");
+        navigate(`/search?q=${q}`);
+    }
+
     return (
         <div /* ─── NAVBAR ──────────────────────────────── */
             style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
+            padding: "14px",
             }}>
         {/* App Icon / Title */}
         <div
@@ -40,7 +51,7 @@ export default function NavBar ({ search, setSearch, onSelect, placeholder = "Se
        <SearchCard
             value={search}
             onChange={setSearch}
-            onSelect={onSelect}
+            onSelect={handleSearchSelection}
             placeholder={placeholder}
         />
 
@@ -53,27 +64,15 @@ export default function NavBar ({ search, setSearch, onSelect, placeholder = "Se
         }}>
             {token ? (
             <>
-                <button
-                onClick={() => navigate("/profile")}
-                className="text-gray-700 font-medium hover:text-blue-600"
-                style={{ whiteSpace: 'nowrap' }}
-                >
-                Profile
+                <button onClick={() => navigate("/profile")} style={{ whiteSpace: 'nowrap' }}>
+                    Profile
                 </button>
-                <button
-                onClick={handleSignOut}
-                className="text-red-600 font-medium hover:text-red-700"
-                style={{ whiteSpace: 'nowrap' }}
-                >
-                Sign Out
+                <button onClick={handleSignOut} style={{ whiteSpace: 'nowrap' }}>
+                    Sign Out
                 </button>
             </>
             ) : (
-            <button
-                onClick={() => navigate("/login")}
-                className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
-                style={{ whiteSpace: 'nowrap' }}
-            >
+            <button onClick={() => navigate("/login")} style={{ whiteSpace: 'nowrap' }}>
                 Sign In
             </button>
             )}

@@ -20,6 +20,11 @@ class Card(SQLModel, table=True):
     quantity: int = Field(default=1, nullable=False)
     intent: str = Field(default="have", nullable=False)
 
+#Model for updating modifiable fields of Card
+class CardUpdate(SQLModel, table=False):
+    quantity: Optional[int] = None
+    price: Optional[str] = None
+
 class TradeOffer(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     from_user_id: int = Field(foreign_key="user.id")

@@ -1,32 +1,59 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../api/client";
 import CardList from "../components/CardList";
 import NavBar from "../components/NavBar";
+import SortDropdown from "../components/SortDropdown";
 
 export default function SearchPage() {
   const [search, setSearch] = useState("");
-  const [setFilter, setSetFilter] = useState("");
-  const [rarityFilter, setRarityFilter] = useState("");
   const [results, setResults] = useState([]);
-
+  const [sortOption, setSortOption] = useState("dateSort");
+  const [ascending, setAscending] = useState(true);
   const navigate = useNavigate();
- function handleSelectCard(card) {
-    console.log("Selected card:", card);
-    navigate(`/user/${card.owner_id}`);
-}
+  const [searchParams] = useSearchParams();
 
+  const sortedResults = [...results].sort((a, b) => {
+    const dir = ascending ? 1 : -1;
+    switch (sortOption) {
+      case "price":
+        return (a.price - b.price) * dir;
+      case "dateSort":
+        return a.id - b.id * dir;
+      case "nameSort":
+        a.name.localeCompare(b.name) * dir;
+      case "setName":
+        return a.set_name.localeCompare(b.set_name) * dir;
+      default:
+        return a.name.localeCompare(b.name) * dir;
+    }
+  });
   async function handleSearch(card) {
     try {
-      const res = await api.get(`/cards/search`, {
-        params: { name: card.name, set: setFilter, rarity: rarityFilter },
+      const name = typeof card === "string" ? card : card?.name;
+      const res = await api.get(`/cards/search/`, {
+        params: { name: name },
       });
       setResults(res.data);
     } catch (err) {
       console.error("Search failed", err);
     }
-    //setSearch(card.name);
+    setSearch(card.name);
   }
+  // Navigate to user profile on card owner select
+  function handleSelectCard(card) {
+    console.log("Selected card:", card);
+    navigate(`/user/${card.owner_id}`);
+  }
+  // Trigger search when ?q= is present in the URL
+  useEffect(() => {
+    const q = searchParams.get("q") || "";
+    if (q && q.length > 0) {
+      setSearch(q);
+      // run search using current filters
+      handleSearch({ name: q });
+    }
+  }, [searchParams]);
   return (
     <>
       <NavBar  
@@ -36,37 +63,27 @@ export default function SearchPage() {
       placeholder="Search for a card..."
       />
       {/* ─── FILTER BAR ──────────────────────────── */}
-      <section className="flex flex-wrap gap-3 items-center px-6 py-3 bg-white shadow-sm mt-1">
-        <select
-          value={setFilter}
-          onChange={(e) => setSetFilter(e.target.value)}
-          className="border border-gray-300 rounded px-3 py-2"
-        >
-          <option value="">All Sets</option>
-          <option value="Dominaria">Dominaria</option>
-          <option value="Modern Horizons 3">Modern Horizons 3</option>
-          <option value="Phyrexia">Phyrexia</option>
-        </select>
-
-        <select
-          value={rarityFilter}
-          onChange={(e) => setRarityFilter(e.target.value)}
-          className="border border-gray-300 rounded px-3 py-2"
-        >
-          <option value="">All Rarities</option>
-          <option value="common">Common</option>
-          <option value="uncommon">Uncommon</option>
-          <option value="rare">Rare</option>
-          <option value="mythic">Mythic</option>
-        </select>
+      <section style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        gap: 12,
+        padding: "12px 16px",
+      }}>
+        <SortDropdown 
+          sortField={sortOption} 
+          setSortField={setSortOption} 
+          ascending={ascending}
+          setAscending={setAscending}
+        />
       </section>
 
       {/* ─── RESULTS ─────────────────────────────── */}
-      <main className="flex-1 px-6 py-4 w-full">
+      <main>
         {results.length > 0 ? (
-          <CardList cards={results} onSelect={handleSelectCard}/>
+          <CardList cards={sortedResults} onSelect={handleSelectCard}/>
         ) : (
-          <p className="text-gray-500 text-center mt-8">
+          <p >
             No results yet. Try searching for a card name.
           </p>
         )}

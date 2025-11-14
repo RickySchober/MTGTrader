@@ -9,7 +9,6 @@ app = FastAPI(title="MTG Trader API")
 
 app.add_middleware(
     CORSMiddleware,
-    # allow both common dev ports and local network during development
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
@@ -27,10 +26,6 @@ def on_startup():
 
 app.include_router(cards.router)
 app.include_router(auth.router)
-
-@app.get("/")
-def root():
-    return {"message": "Welcome to MTG Trader API (SQLModel)"}
 
 @app.get("/users/{user_id}")
 def get_user(user_id: int, session: Session = Depends(get_session)):

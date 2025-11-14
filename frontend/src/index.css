@@ -85,8 +85,13 @@ button.primary {
   border: 1px solid rgba(255,255,255,0.06);
 }
 
-button:hover { transform: translateY(-1px); }
-button:active { transform: translateY(0); }
+button:not(.no-bob):hover { 
+  transform: translateY(-1px);
+}
+
+button:not(.no-bob):active {
+  transform: translateY(0);
+}
 button:focus { box-shadow: 0 0 0 4px rgba(79,124,255,0.12); outline: none; }
 
 /* Form controls */

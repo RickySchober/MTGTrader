@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 export default function SearchCard({
-  value,            // controlled search string
-  onChange,         // setter: (newValue) => void
-  onSelect,         // callback: (card) => void
+  value,            
+  onChange,         
+  onSelect,         // callback triggered when a card is selected
   placeholder = "Search for a card...",
   minChars = 3,
   maxResults = 8,
@@ -18,7 +18,6 @@ export default function SearchCard({
   const containerRef = useRef(null);
 
   useEffect(() => {
-    // clean up on unmount
     return () => {
       if (abortRef.current) abortRef.current.abort();
       if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -89,6 +88,7 @@ export default function SearchCard({
       setActiveIndex(-1);
     }
   }
+  // Generate a print description based on Scryfall card data
   function makePrintDescription(scryfallCard) {
     const parts = [];
     if (scryfallCard.border_color === "borderless") parts.push("Borderless");
@@ -100,7 +100,6 @@ export default function SearchCard({
       }
       if (scryfallCard.frame_effects.includes("etched")) parts.push("Etched Foil");
     }
-    // Some card objects include foil/nonfoil booleans
     if (scryfallCard.foil === true) parts.push("Foil");
     else if (scryfallCard.nonfoil === true) parts.push("Nonfoil");
 

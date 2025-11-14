@@ -8,6 +8,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<SearchPage />} />
+      <Route path="/search" element={<SearchPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/user/:id" element={<UserProfilePage />} />
