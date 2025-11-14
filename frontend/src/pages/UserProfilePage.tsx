@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/client";
 import CardList from "../components/CardList";
+import * as React from "react";
+import { card } from "../../types";
 
-export default function UserProfilePage() {
-  const { id } = useParams();
-  const [cards, setCards] = useState([]);
-  const [username, setUsername] = useState("");
+const UserProfilePage: React.FC = () => {
+  const { id } = useParams<number>();
+  const [cards, setCards] = useState<card[]>([]);
+  const [username, setUsername] = useState<string>("");
 
   useEffect(() => {
     async function loadUser() {
@@ -25,3 +27,4 @@ export default function UserProfilePage() {
     </div>
   );
 }
+export default UserProfilePage;

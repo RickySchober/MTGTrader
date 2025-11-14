@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import api from "../api/client";
 import { useNavigate } from "react-router-dom";
+import * as React from "react";
 
-function parseJwt(token) {
+function parseJwt(token: string) {
   try {
     const payload = token.split(".")[1];
     // base64-url -> base64
@@ -19,11 +20,11 @@ function parseJwt(token) {
   }
 }
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
-  const [isRegister, setIsRegister] = useState(false);
+const LoginPage: React.FC = () => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const [isRegister, setIsRegister] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -136,3 +137,4 @@ export default function LoginPage() {
     </div>
   );
 }
+export default LoginPage;

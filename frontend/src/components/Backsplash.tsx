@@ -1,6 +1,12 @@
+import * as React from "react";
 
-export default function Backsplash( {children, heroHeight = 600, bgArt} ) {
+interface BacksplashProps {
+    children: React.ReactNode;
+    heroHeight?: number;
+    bgArt: string;
+}
 
+const Backsplash: React.FC<BacksplashProps> = ({ children, heroHeight = 400, bgArt }) => {
     return (
     <>
         <div style={{
@@ -32,3 +38,4 @@ export default function Backsplash( {children, heroHeight = 600, bgArt} ) {
     </>
     );
 }
+export default Backsplash;

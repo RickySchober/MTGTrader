@@ -1,6 +1,15 @@
 import CardItem from "./CardItem";
+import * as React from "react";
+import { card } from "../../types";
 
-export default function CardList({ cards, onSelect, triggerUpdate, modifiable = false}) {
+interface CardListProps {
+  cards: card[];
+  onSelect?: (card: card) => void;
+  triggerUpdate?: () => void;
+  modifiable?: boolean;
+}
+
+const CardList: React.FC<CardListProps> = ({ cards, onSelect, triggerUpdate, modifiable = false }) => {
   if (!cards || !cards.length) return <p>No cards found.</p>;
   function handleClick(card){
     onSelect?.(card);
@@ -21,3 +30,4 @@ export default function CardList({ cards, onSelect, triggerUpdate, modifiable = 
     </div>
   );
 }
+export default CardList;

@@ -1,8 +1,16 @@
 import api from "../api/client";
+import * as React from "react";
+import { card } from "../../types";
 
-function CardItem({ card, triggerUpdate, modifiable = false}) {
+interface CardItemProps {
+  card: card;
+  triggerUpdate?: () => void;
+  modifiable?: boolean;
+}
 
-  async function modifyQuantity(quantity) {
+const CardItem: React.FC<CardItemProps> = ({ card, triggerUpdate, modifiable = false }) => {
+
+  async function modifyQuantity(quantity: number) {
     try {
       await api.patch(`/cards/${card.id}`, { quantity: quantity });
       card.quantity = quantity;

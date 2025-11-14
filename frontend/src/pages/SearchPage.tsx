@@ -6,13 +6,14 @@ import NavBar from "../components/NavBar";
 import SortDropdown from "../components/SortDropdown";
 import Backsplash from "../components/Backsplash";
 import bgArt from "../assets/Treasure-Cruise-MtG-Art.jpg";
+import * as React from "react";
+import { card } from "../../types";
 
-
-export default function SearchPage() {
-  const [search, setSearch] = useState("");
-  const [results, setResults] = useState([]);
-  const [sortOption, setSortOption] = useState("dateSort");
-  const [ascending, setAscending] = useState(true);
+const SearchPage: React.FC = () => {
+  const [search, setSearch] = useState<string>("");
+  const [results, setResults] = useState<card[]>([]);
+  const [sortOption, setSortOption] = useState<string>("dateSort");
+  const [ascending, setAscending] = useState<boolean>(true);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -95,3 +96,4 @@ export default function SearchPage() {
     </>
   );
 }
+export default SearchPage;

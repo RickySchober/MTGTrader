@@ -1,10 +1,17 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import SearchCard from "./SearchCard";
 import icon from "/favicon.png";
+import * as React from "react";
+import { card } from "../../types";
 
+interface NavBarProps {
+    search: string;
+    setSearch?: (value: string) => void;
+    onSelect?: (card: card) => void;
+    placeholder?: string;
+}
 
-export default function NavBar ({ search, setSearch, onSelect, placeholder = "Search for a card..." }) {
-
+const NavBar: React.FC<NavBarProps> = ({ search, setSearch, onSelect, placeholder }) => {
     const token = localStorage.getItem("token");
     const navigate = useNavigate();
 
@@ -14,7 +21,7 @@ export default function NavBar ({ search, setSearch, onSelect, placeholder = "Se
     }
     const location = useLocation();
 
-    function handleSearchSelection(card) {
+    function handleSearchSelection(card: card) {
         if (location.pathname === "/search") {
             setSearch?.(card?.name || "");
             if (typeof onSelect === "function") onSelect(card);
@@ -79,3 +86,4 @@ export default function NavBar ({ search, setSearch, onSelect, placeholder = "Se
         </div>
      </div>);
 }
+export default NavBar;

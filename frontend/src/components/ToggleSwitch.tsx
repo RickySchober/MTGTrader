@@ -1,11 +1,20 @@
+import * as React from "react";
 
-export default function ToggleSwitch({
+interface ToggleSwitchProps {
+    value?: boolean;
+    onChange?: (value: boolean) => void;
+    leftLabel?: string;
+    rightLabel?: string;
+    id?: string;
+}
+
+const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   value = false,
   onChange = () => {},
-  leftLabel = "Off",
-  rightLabel = "On",
+  leftLabel = "On",
+  rightLabel = "Off",
   id,
-}) {
+}) => {
   const width = 200;
   const height = 45;
   const padding = 0;
@@ -62,3 +71,4 @@ export default function ToggleSwitch({
     </div>
   );
 }
+export default ToggleSwitch;

@@ -1,5 +1,40 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import * as React from "react";
+import { card } from "../../types";
+
+interface SearchCardProps {
+    value: string;
+    onChange?: (value: string) => void;
+    onSelect?: (card: card) => void;         // callback triggered when a card is selected
+    placeholder?: string;
+    minChars?: number;
+    maxResults?: number;
+    debounceMs?: number;
+}
+
+interface ScryfallCard {
+    id: string;
+    name: string;
+    set_name?: string;
+    set?: string;
+    image_uris?: {
+        small?: string;
+    };
+    card_faces?: Array<{
+        name?: string;
+        image_uris?: {
+            small?: string;
+        };
+    }>;
+    border_color?: string;
+    promo?: boolean;
+    variation?: boolean;
+    frame_effects?: string[];
+    foil?: boolean;
+    nonfoil?: boolean;
+}
+
 
 export default function SearchCard({
   value,            
@@ -10,12 +45,12 @@ export default function SearchCard({
   maxResults = 8,
   debounceMs = 250,
 }) {
-  const [suggestions, setSuggestions] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(-1);
+  const [suggestions, setSuggestions] = useState<ScryfallCard[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [activeIndex, setActiveIndex] = useState<number>(-1);
   const abortRef = useRef(null);
   const debounceRef = useRef(null);
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     return () => {
@@ -70,7 +105,7 @@ export default function SearchCard({
     onSelect?.(card);
   }
 
-  function onKeyDown(e) {
+  function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (!suggestions.length) return;
     if (e.key === "ArrowDown") {
       e.preventDefault();
@@ -89,8 +124,8 @@ export default function SearchCard({
     }
   }
   // Generate a print description based on Scryfall card data
-  function makePrintDescription(scryfallCard) {
-    const parts = [];
+  function makePrintDescription(scryfallCard: ScryfallCard): string {
+    const parts: string[] = [];
     if (scryfallCard.border_color === "borderless") parts.push("Borderless");
     if (scryfallCard.promo) parts.push("Promo");
     if (scryfallCard.variation) parts.push("Variant");

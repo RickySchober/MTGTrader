@@ -7,28 +7,22 @@ import NavBar from "../components/NavBar";
 import ToggleSwitch from "../components/ToggleSwitch";
 import Backsplash from "../components/Backsplash";
 import bgArt from "../assets/Dragons-of-Tarkir-Gudul-Lurker-MtG.jpg";
+import * as React from "react";
+import { card } from "../../types";
 
-export default function ProfilePage() {
-  const [cards, setCards] = useState([]);
-  const [searchRedirect, setSearchRedirect] = useState("");
-  const [search, setSearch] = useState("");
-  const [add, setAdd] = useState(false); // toggle state between viewing and adding cards
-  const [haves, setHaves] = useState(false); // toggle state between wants and haves
-  const [recentAdded, setRecentAdded] = useState([]); // track recently added cards during add session
-  const [showListInput, setShowListInput] = useState(false);
-  const [sortOption, setSortOption] = useState("newest");
-  const [ascending, setAscending] = useState(true);
-  const [showSearch, setShowSearch] = useState(true);
-  const [listText, setListText] = useState("");
-  const [form, setForm] = useState({
-    name: "",
-    set_name: "",
-    rarity: "",
-    price: "",
-    image_url: "",
-    quantity: 1,
-    intent: haves ? "have" : "want",
-  });
+const ProfilePage: React.FC = () => {
+  const [cards, setCards] = useState<card[]>([]);
+  const [searchRedirect, setSearchRedirect] = useState<string>("");
+  const [search, setSearch] = useState<string>("");
+  const [add, setAdd] = useState<boolean>(false); // toggle state between viewing and adding cards
+  const [haves, setHaves] = useState<boolean>(false); // toggle state between wants and haves
+  const [recentAdded, setRecentAdded] = useState<card[]>([]); // track recently added cards during add session
+  const [showListInput, setShowListInput] = useState<boolean>(false);
+  const [sortOption, setSortOption] = useState<string>("newest");
+  const [ascending, setAscending] = useState<boolean>(true);
+  const [showSearch, setShowSearch] = useState<boolean>(true);
+  const [listText, setListText] = useState<string>("");
+  const [form, setForm] = useState<card | null>(null);
   
   const sortedCards = [...cards].filter(card => card.intent === (haves ? "have" : "want")).sort((a, b) => {
     const dir = ascending ? 1 : -1;
@@ -65,16 +59,8 @@ export default function ProfilePage() {
     fetchMyCards();
   }, []);
 
-  function handleSelectCard(card) {
-    setForm({
-      name: card.name,
-      set_name: card.set_name || card.set,
-      rarity: card.rarity || "",
-      price: card.prices?.usd ? parseFloat(card.prices.usd) : 0,
-      image_url: card.image_uris?.normal || card.card_faces?.[0]?.image_uris?.normal || "",
-      quantity: 1,
-      intent: (haves ? "have" : "want"),
-    });
+  function handleSelectCard(card: card) {
+    setForm(card);
     setSearch(card.name);
   }
   async function updateRecent() {
@@ -86,7 +72,7 @@ export default function ProfilePage() {
     }
     setRecentAdded([...recentAdded]);
   }
-  async function onSelect(card) {
+  async function onSelect(card: card) {
     handleSelectCard(card);
     const created = await addCard();
     if (created) {
@@ -121,7 +107,6 @@ export default function ProfilePage() {
           leftLabel="Wants"
           rightLabel="Haves"
           id="profile-type-toggle"
-          size="md"
         />
         <ToggleSwitch
           value={add}
@@ -129,7 +114,6 @@ export default function ProfilePage() {
           leftLabel="View"
           rightLabel="Add"
           id="profile-view-toggle"
-          size="md"
         />
         <SortDropdown 
           sortField={sortOption} 
@@ -196,7 +180,7 @@ export default function ProfilePage() {
     // helper to parse lines of the exact required format:
     // Quantity, name, set identifier in parentheses. Lines without quantity or without a set are ignored.
     // Examples accepted: "1x Umara Wizard (ZNR)", "2 Lightning Bolt (M21)"; trailing text after the ) is ignored.
-    function parseLine(line) {
+    function parseLine(line: string): { qty: number; name: string; setId: string } | null {
       const m = line.match(/^\s*(\d+)\s*x?\s+(.+?)\s*\(([^)]+)\)/i);
       if (!m) return null; // ignore lines that don't match the required format
       const qty = parseInt(m[1], 10);
@@ -205,11 +189,11 @@ export default function ProfilePage() {
       return { qty, name, setId };
     }
 
-    let added = 0;
-    let failed = 0;
-    let ignored = 0;
+    let added: number = 0;
+    let failed: number = 0;
+    let ignored: number = 0;
 
-    const newlyAdded = [];
+    const newlyAdded: card[] = [];
     for (const raw of lines) {
       const parsed = parseLine(raw);
       if (!parsed) {
@@ -246,8 +230,8 @@ export default function ProfilePage() {
         };
 
         try {
-          const res = await api.post("/cards/", payload);
-          if (res?.data) newlyAdded.push(res.data);
+          const res: card = await api.post("/cards/", payload);
+          if (res) newlyAdded.push(res);
           added += 1;
         } catch (err) {
           console.error("Failed to add line:", raw, err);
@@ -267,3 +251,4 @@ export default function ProfilePage() {
         alert(`Added ${added} cards. ${failed ? `${failed} failed.` : ""}`);
   }
 }
+export default ProfilePage;

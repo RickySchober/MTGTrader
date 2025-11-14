@@ -1,9 +1,13 @@
-export default function SortDropdown({
-  sortField,
-  setSortField,
-  ascending,
-  setAscending,
-}) {
+import * as React from "react";
+
+interface SortDropdownProps {
+    sortField: string;
+    setSortField: (field: string) => void;
+    ascending: boolean;
+    setAscending: (asc: boolean) => void;
+}
+
+const SortDropown: React.FC<SortDropdownProps> = ({ sortField, setSortField, ascending, setAscending }) => {
   return (
     <div
       style={{
@@ -43,3 +47,4 @@ export default function SortDropdown({
     </div>
   );
 }
+export default SortDropown;
