@@ -159,7 +159,7 @@ export default function SearchCard({
   return (
     <div
       ref={containerRef}
-      style={{ width: "90%", padding: 16, position: "relative" }}
+      style={{ width: "70%", padding: "10px", position: "relative" }}
     >
       <input
         value={value}
