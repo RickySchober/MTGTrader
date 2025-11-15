@@ -5,7 +5,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Session
 from .database import get_session
 from .models import User
+import os
+
 app = FastAPI(title="MTG Trader API")
+
+NETLIFY_URL = os.getenv("NETLIFY_URL", "")
 
 app.add_middleware(
     CORSMiddleware,
@@ -14,6 +18,7 @@ app.add_middleware(
         "http://127.0.0.1:5173",
         "http://localhost:5174",
         "http://127.0.0.1:5174",
+        NETLIFY_URL,
     ],
     allow_credentials=True,
     allow_methods=["*"],
