@@ -20,14 +20,7 @@ const CardList: React.FC<CardListProps> = ({
     onSelect?.(card);
   }
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(4, 1fr)",
-        gap: "10px",
-        alignItems: "start",
-      }}
-    >
+    <div className= "grid grid-cols-4 gap-2">
       {cards.map((card) => (
         <div key={card.id} onClick={() => handleClick(card)}>
           <CardItem

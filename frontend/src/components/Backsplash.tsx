@@ -14,36 +14,18 @@ const Backsplash: React.FC<BacksplashProps> = ({
   return (
     <>
       <div
+        className="absolute inset-0 mt-20 bg-no-repeat bg-cover bg-center z-0 pointer-events-none"
         style={{
           height: heroHeight,
-          position: "absolute",
-          inset: 0,
-          marginTop: 100,
           backgroundImage: `url(${bgArt})`,
           maskImage:
             "linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, transparent 100%)",
           WebkitMaskImage:
             "linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, transparent 100%)",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          zIndex: 0,
-          pointerEvents: "none",
         }}
       />
 
-      <div
-        style={{
-          //Position all following content above bg image
-          position: "relative",
-          zIndex: 2,
-          marginTop: 250,
-          marginLeft: 48,
-          marginRight: 48,
-        }}
-      >
-        {children}
-      </div>
+      <div className="relative z-20 mt-60  mx-12">{children}</div>
     </>
   );
 };

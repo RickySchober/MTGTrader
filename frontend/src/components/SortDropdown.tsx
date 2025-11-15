@@ -14,24 +14,12 @@ const SortDropown: React.FC<SortDropdownProps> = ({
   setAscending,
 }) => {
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "10px",
-        margin: "10px 0",
-      }}
-    >
+    <div className="flex item-center gap-2.5 m-2.5">
       {/* Dropdown */}
       <select
         value={sortField}
         onChange={(e) => setSortField(e.target.value)}
-        style={{
-          fontSize: 19,
-          fontWeight: 550,
-          padding: "10px 20px 10px 20px",
-          borderRadius: "4px",
-        }}
+        className="px-6 py-2 text-lg font-semibold"
       >
         <option value="nameSort">Name</option>
         <option value="price">Price</option>
@@ -42,14 +30,7 @@ const SortDropown: React.FC<SortDropdownProps> = ({
       {/* Asc/Desc Toggle Button */}
       <button
         onClick={() => setAscending(!ascending)}
-        style={{
-          padding: "6px 10px",
-          borderRadius: "6px",
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
+        className="flex items-center justify-center cursor-pointer"
       >
         <span style={{ opacity: ascending ? 1 : 0.25 }}>↑</span>
         <span style={{ opacity: ascending ? 0.25 : 1 }}>↓</span>

@@ -85,7 +85,7 @@ const ProfilePage: React.FC = () => {
   const heroHeight = 1000; // px - the background image area height
 
   return (
-    <div style={{ position: "relative" }}>
+    <div className="position-relative">
       <div>
         <NavBar
           search={searchRedirect}
@@ -96,15 +96,7 @@ const ProfilePage: React.FC = () => {
       </div>
 
       <Backsplash heroHeight={heroHeight} bgArt={bgArt}>
-        <div
-          style={{
-            position: "relative",
-            display: "flex",
-            justifyContent: "left",
-            alignItems: "center",
-            gap: 12,
-          }}
-        >
+        <div className="flex justify-start items-center gap-3">
           <ToggleSwitch
             value={haves}
             onChange={setHaves}
@@ -157,8 +149,8 @@ const ProfilePage: React.FC = () => {
           />
         )}
         {showListInput && add && (
-          <div style={{ marginTop: 12 }}>
-            <div style={{ marginBottom: 6, fontWeight: 600 }}>
+          <div className="mt-4">
+            <div className="mb-1.5 text-2xl font-semibold">
               Paste list (one card per line):
             </div>
             <textarea
@@ -166,17 +158,9 @@ const ProfilePage: React.FC = () => {
               onChange={(e) => setListText(e.target.value)}
               placeholder={`Example:\n1 Lightning Bolt (STA) \n1x Artist's Talent (BLB)`}
               rows={8}
-              style={{
-                width: "60%",
-                padding: 8,
-                fontSize: 14,
-                borderRadius: 6,
-                border: "1px solid rgba(255,255,255,0.06)",
-                background: "transparent",
-                color: "var(--text)",
-              }}
+              className="w-3/5 p-2.5 text-base rounded-md border border-gray-700 bg-transparent text-white"
             />
-            <div style={{ marginTop: 8, display: "flex", gap: 8 }}>
+            <div className="flex gap-2 mt-2">
               <button
                 onClick={async (e) => {
                   e.preventDefault();
@@ -196,7 +180,7 @@ const ProfilePage: React.FC = () => {
           </div>
         )}
         {add && recentAdded.length > 0 && (
-          <div style={{ marginTop: 18 }}>
+          <div className="mt-4">
             <CardList
               cards={recentAdded}
               triggerUpdate={updateRecent}
@@ -205,7 +189,7 @@ const ProfilePage: React.FC = () => {
           </div>
         )}
         {!add && (
-          <div style={{ marginTop: 18 }}>
+          <div className="mt-4">
             <CardList
               cards={sortedCards}
               triggerUpdate={fetchMyCards}

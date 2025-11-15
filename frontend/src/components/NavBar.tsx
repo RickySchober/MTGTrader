@@ -19,12 +19,12 @@ const NavBar: React.FC<NavBarProps> = ({
 }) => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
+  const location = useLocation();
 
   function handleSignOut() {
     localStorage.removeItem("token");
     navigate("/login");
   }
-  const location = useLocation();
 
   function handleSearchSelection(card: card) {
     if (location.pathname === "/search") {
@@ -37,82 +37,54 @@ const NavBar: React.FC<NavBarProps> = ({
   }
 
   return (
-    <div /* ─── NAVBAR ──────────────────────────────── */
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "14px",
-      }}
-    >
+    <div className="flex justify-between items-center w-full px-4 py-1 bg-neutral-900 text-white shadow-md">
       {/* App Icon / Title */}
       <div
         onClick={() => navigate("/")}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-          cursor: "pointer",
-        }}
+        className="flex items-center gap-2 cursor-pointer"
       >
-        <h1
-          style={{
-            margin: 0,
-            fontSize: 46,
-            fontWeight: 700,
-            color: "#ddddddff",
-            display: "flex",
-            alignItems: "center",
-            gap: 6,
-          }}
-        >
+        <h1 className="flex items-center gap-2 text-4xl font-bold text-gray-200">
           <img
             src={icon}
             alt="M"
-            style={{
-              width: 50,
-              height: 50,
-              objectFit: "contain",
-              display: "inline-block",
-            }}
+            className="w-12 h-12 object-contain inline-block"
           />
-          <span style={{ lineHeight: 1, marginLeft: -7 }}>TGTrader</span>
+          <span className="-ml-1 leading-none">TGTrader</span>
         </h1>
       </div>
 
       {/* Search Bar */}
-      <SearchCard
-        value={search}
-        onChange={setSearch}
-        onSelect={handleSearchSelection}
-        placeholder={placeholder}
-      />
+      <div className="flex-1 w-auto mx-6">
+        <SearchCard
+          value={search}
+          onChange={setSearch}
+          onSelect={handleSearchSelection}
+          placeholder={placeholder}
+        />
+      </div>
 
-      {/* Auth & Profile Buttons */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: 12,
-        }}
-      >
+      {/* Auth Buttons */}
+      <div className="flex items-center gap-4">
         {token ? (
           <>
             <button
               onClick={() => navigate("/profile")}
-              style={{ whiteSpace: "nowrap" }}
+              className="whitespace-nowrap hover:text-gray-300 transition"
             >
               Profile
             </button>
-            <button onClick={handleSignOut} style={{ whiteSpace: "nowrap" }}>
+
+            <button
+              onClick={handleSignOut}
+              className="whitespace-nowrap hover:text-gray-300 transition"
+            >
               Sign Out
             </button>
           </>
         ) : (
           <button
             onClick={() => navigate("/login")}
-            style={{ whiteSpace: "nowrap" }}
+            className="whitespace-nowrap hover:text-gray-300 transition"
           >
             Sign In
           </button>
@@ -121,4 +93,5 @@ const NavBar: React.FC<NavBarProps> = ({
     </div>
   );
 };
+
 export default NavBar;

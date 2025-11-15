@@ -20,10 +20,11 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   const padding = 0;
   const knobWidth = width / 2 - padding * 2;
   const knobHeight = height - padding * 2;
+
   return (
-    <div style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+    <div className="inline-flex items-center gap-2">
       <button
-        className="no-bob" // Prevent bobbing effect on toggle switch
+        className="no-bob relative cursor-pointer inline-block overflow-hidden p-0"
         id={id}
         role="switch"
         aria-checked={!!value}
@@ -37,27 +38,10 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
           height,
           borderRadius: height / 10,
           background: "rgba(255,255,255,0.02)",
-          border: "1x solid rgba(255, 255, 255, 0.48)",
-          position: "relative",
-          padding: 0,
-          cursor: "pointer",
-          display: "inline-block",
-          overflow: "hidden",
+          border: "1px solid rgba(255, 255, 255, 0.48)",
         }}
       >
-        <div
-          style={{
-            position: "relative",
-            zIndex: 2,
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            fontSize: 13,
-            fontWeight: 600,
-          }}
-        >
+        <div className="relative z-20 w-full h-full flex items-center justify-between text-sm font-semibold">
           <span
             style={{
               fontWeight: 550,
@@ -86,21 +70,15 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
 
         {/* sliding white box knob */}
         <div
+          className="bg-white z-10 absolute top-0 flex items-center px-2"
           style={{
             width: knobWidth,
             height: knobHeight,
             borderRadius: knobHeight / 10,
-            background: "white",
-            zIndex: 1,
-            position: "absolute",
             top: padding,
             left: value ? width - knobWidth - padding : padding,
             transition: "left 380ms cubic-bezier(.2,.9,.2,1), box-shadow 120ms",
-            display: "flex",
-            alignItems: "center",
             justifyContent: value ? "flex-end" : "flex-start",
-            paddingLeft: 8,
-            paddingRight: 8,
           }}
         ></div>
       </button>

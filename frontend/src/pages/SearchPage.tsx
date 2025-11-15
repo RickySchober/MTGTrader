@@ -68,14 +68,7 @@ const SearchPage: React.FC = () => {
       />
       <Backsplash bgArt={bgArt} heroHeight={1000}>
         {/* ─── FILTER BAR ──────────────────────────── */}
-        <section
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-start",
-            gap: 12,
-          }}
-        >
+        <section className="flex justify-start items-center gap-3 m-2.5">
           <SortDropdown
             sortField={sortOption}
             setSortField={setSortOption}
@@ -85,13 +78,13 @@ const SearchPage: React.FC = () => {
         </section>
 
         {/* ─── RESULTS ─────────────────────────────── */}
-        <main>
+        <div>
           {results.length > 0 ? (
             <CardList cards={sortedResults} onSelect={handleSelectCard} />
           ) : (
             <p>No results yet. Try searching for a card name.</p>
           )}
-        </main>
+        </div>
       </Backsplash>
     </>
   );
