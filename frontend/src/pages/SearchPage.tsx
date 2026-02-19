@@ -9,7 +9,6 @@ import api from "@/api/client.js";
 import Backsplash from "@/components/Backsplash.js";
 import Button from "@/components/Button.js";
 import CardList from "@/components/CardList.js";
-import NavBar from "@/components/NavBar.js";
 import SortDropdown from "@/components/SortDropdown.js";
 import { SEARCH_DEFAULT_BG } from "@/lib/constants.js";
 import { card, SortOption } from "@/lib/types.js";
@@ -75,7 +74,6 @@ const SearchPage: React.FC = () => {
   const sortedResults = sortCards(results, sortOption, ascending, "have", [notMyCards]);
   return (
     <>
-      <NavBar onSelect={handleSearch} />
       <Backsplash bgArt={SEARCH_DEFAULT_BG}>
         {/* ─── FILTER BAR ──────────────────────────── */}
         <section className="m-2.5 flex items-center justify-start gap-3">

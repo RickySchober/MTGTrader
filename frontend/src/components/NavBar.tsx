@@ -1,7 +1,7 @@
 /* Navigation bar on the top of most pages to easily navigate between them.
    If user is logged in will display profile dropdown otherwise show sign in.
 */
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import icon from "/favicon.png";
@@ -9,13 +9,7 @@ import AnimatedDropDown from "./AnimatedDropDown.js";
 import Button from "./Button.js";
 import SearchCard from "./SearchCard.js";
 
-import { card } from "@/lib/types.js";
-
-interface NavBarProps {
-  onSelect?: (card: card) => void; // Callback when a card is selected from search.
-}
-
-const NavBar: React.FC<NavBarProps> = ({ onSelect }) => {
+const NavBar: React.FC = () => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
@@ -34,7 +28,7 @@ const NavBar: React.FC<NavBarProps> = ({ onSelect }) => {
       </div>
 
       <div className="mx-6 w-auto flex-1">
-        <SearchCard onSelect={onSelect} />
+        <SearchCard />
       </div>
 
       {/* Auth Buttons */}

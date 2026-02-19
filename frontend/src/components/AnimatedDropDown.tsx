@@ -33,7 +33,7 @@ const AnimatedDropDown: React.FC<AnimatedDropDownProps> = ({ options }) => {
         Profile
       </Button>
       {tradeNotification > 0 && (
-        <span className="absolute -right-1.5 -top-1.5 flex h-6 min-w-[1.5rem] items-center justify-center rounded-full border-2 border-gray-900 bg-red-500 px-1 text-sm font-bold leading-none text-white">
+        <span className="absolute -right-1.5 -top-1.5 flex h-6 min-w-6 items-center justify-center rounded-full border-2 border-gray-900 bg-red-500 px-1 text-sm font-bold leading-none text-white">
           {numberOfNotifs}
         </span>
       )}
@@ -67,7 +67,7 @@ const AnimatedDropDown: React.FC<AnimatedDropDownProps> = ({ options }) => {
                 {option.name}
 
                 {isTradeLog && tradeNotification > 0 && (
-                  <span className="flex h-6 min-w-[1.5rem] items-center justify-center rounded-full border-2 border-gray-900 bg-red-500 px-1 text-sm font-bold leading-none text-white">
+                  <span className="flex h-6 min-w-6 items-center justify-center rounded-full border-2 border-gray-900 bg-red-500 px-1 text-sm font-bold leading-none text-white">
                     {numberOfNotifs}
                   </span>
                 )}

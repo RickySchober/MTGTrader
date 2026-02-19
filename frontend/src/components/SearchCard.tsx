@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { card, ScryfallCard } from "@/lib/types.js";
 
 interface SearchCardProps {
-  onSelect?: (card: card) => void; // callback triggered when a card is selected
+  onSelect?: (card: card) => void; // Callback when a card is selected from search.
   placeholder?: string;
   minChars?: number;
   maxResults?: number;
@@ -56,17 +56,12 @@ const SearchCard: React.FC<SearchCardProps> = ({
   }, [search]);
 
   function handleSearchSelection(card: card) {
-    if (typeof onSelect === "function") {
-      console.log("Calling onSelect from SearchCard");
-      return onSelect(card);
-    }
-    if (location.pathname === "/search") {
+    if (onSelect) onSelect(card);
+    else {
+      const q = encodeURIComponent(card?.name || "");
+      navigate(`/search?q=${q}`);
       setSearch?.(card?.name || "");
-      console.log("Already on search page");
-      return;
     }
-    const q = encodeURIComponent(card?.name || "");
-    navigate(`/search?q=${q}`);
   }
 
   const triggerSearch = useCallback(() => {
@@ -104,7 +99,6 @@ const SearchCard: React.FC<SearchCardProps> = ({
     setSearch?.(e.target.value);
     setActiveIndex(-1);
   }
-  // When a card is selected from the suggestions convert it to local card type and call onSelect
   function handleSelect(card: ScryfallCard) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, ...rest } = card; //extract card info minus id
