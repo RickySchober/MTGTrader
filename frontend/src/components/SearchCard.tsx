@@ -190,7 +190,7 @@ const SearchCard: React.FC<SearchCardProps> = ({
         placeholder={placeholder}
         aria-autocomplete="list"
         aria-expanded={suggestions.length > 0}
-        className="w-[99%] rounded-md border border-gray-300 p-2 text-xl focus:outline-none focus:ring-2 focus:ring-blue-400"
+        className="border-foreground focus:ring-primary w-[99%] rounded-md border p-2 text-xl focus:outline-none focus:ring-2"
       />
 
       {loading && <div className="absolute right-2 top-2 text-xl">⏳</div>}
@@ -198,7 +198,7 @@ const SearchCard: React.FC<SearchCardProps> = ({
       {suggestions.length > 0 && (
         <div
           role="listbox"
-          className="absolute left-0 right-0 top-full z-50 max-h-[800px] overflow-y-auto border border-gray-300 bg-white"
+          className="bg-foreground absolute left-0 right-0 top-full z-50 max-h-[800px] overflow-y-auto"
         >
           {suggestions.map((s, idx) => {
             const cardName = s.name || s.card_faces?.[0]?.name || "Unknown";
@@ -218,7 +218,7 @@ const SearchCard: React.FC<SearchCardProps> = ({
                 onMouseDown={(ev) => ev.preventDefault()}
                 onClick={() => handleSelect(s)}
                 onMouseEnter={() => checkMouseEnter(idx)}
-                className={`flex cursor-pointer gap-2 border-b border-gray-200 p-2 ${isActive ? "bg-blue-50" : "bg-transparent"} `}
+                className={`border-foreground-dark flex cursor-pointer gap-2 border-b p-2 ${isActive ? "bg-blue-50" : "bg-transparent"} `}
               >
                 {img && (
                   <img
@@ -228,11 +228,11 @@ const SearchCard: React.FC<SearchCardProps> = ({
                   />
                 )}
                 <div className="flex-1">
-                  <div className="text-4xl font-semibold italic text-gray-700">{cardName}</div>
+                  <div className="text-slate-light text-4xl font-semibold italic">{cardName}</div>
 
-                  <div className="text-xl font-semibold italic text-gray-700">{setName}</div>
+                  <div className="text-slate-light text-xl font-semibold italic">{setName}</div>
 
-                  <div className="text-xl font-semibold italic text-gray-700">{printing}</div>
+                  <div className="text-slate-light text-xl font-semibold italic">{printing}</div>
                 </div>
               </div>
             );

@@ -67,7 +67,7 @@ const TradeLogPage: React.FC = () => {
 
   return (
     <>
-      <div className="mx-auto max-w-5xl p-6 text-white">
+      <div className="mx-auto max-w-5xl p-6">
         <h1 className="mb-6 text-3xl font-bold">Trade Log:</h1>
 
         <div className="space-y-4">
@@ -83,16 +83,15 @@ const TradeLogPage: React.FC = () => {
               <div
                 key={trade.id}
                 onClick={() => selectTrade(trade)}
-                className="relative cursor-pointer rounded border border-gray-700 bg-[#111318] p-4 transition hover:bg-[#1a1d22]"
+                className="bg-slate-dark hover:bg-slate border-slate-light relative cursor-pointer rounded border-2 p-4 transition"
               >
                 {/* Header Row */}
                 <div className="mb-1 flex items-center justify-between">
                   <div className="flex items-baseline justify-between gap-7">
                     <h2 className="text-xl font-semibold">Trade #{trade.id}</h2>
                     {/* User Info */}
-                    <p className="mb-2 text-xl text-gray-300">
-                      Trading with:{" "}
-                      <span className="font-semibold text-white">{otherUser?.username}</span>
+                    <p className="mb-2 text-xl">
+                      Trading with: <span className="font-semibold">{otherUser?.username}</span>
                     </p>
                   </div>
                   <span className={`font-bold ${statusColor(trade.status)}`}>
@@ -103,12 +102,12 @@ const TradeLogPage: React.FC = () => {
                 {/* Totals */}
                 <div className="mb-1 flex justify-between">
                   <div>
-                    <p className="text-sm text-gray-400">Your Value</p>
-                    <p className="text-lg font-bold text-blue-400">${myTotal.toFixed(2)}</p>
+                    <p className="text-foreground-dark text-sm">Your Value</p>
+                    <p className="text-primary text-lg font-bold">${myTotal.toFixed(2)}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-400">Their Value</p>
-                    <p className="text-lg font-bold text-green-400">${theirTotal.toFixed(2)}</p>
+                    <p className="text-foreground-dark text-sm">Their Value</p>
+                    <p className="text-success text-lg font-bold">${theirTotal.toFixed(2)}</p>
                   </div>
                 </div>
 
@@ -121,7 +120,7 @@ const TradeLogPage: React.FC = () => {
                         key={ti.id}
                         src={ti.card?.image_url}
                         alt={ti.card?.name}
-                        className="h-12 w-8 rounded-sm border border-gray-700 object-cover"
+                        className="h-24 w-16 rounded-sm object-cover"
                       />
                     ))}
                   </div>
@@ -133,20 +132,20 @@ const TradeLogPage: React.FC = () => {
                         key={ti.id}
                         src={ti.card?.image_url}
                         alt={ti.card?.name}
-                        className="h-12 w-8 rounded-sm border border-gray-700 object-cover"
+                        className="h-24 w-16 rounded-sm object-cover"
                       />
                     ))}
                   </div>
                 </div>
                 {showBadge && (
-                  <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500" />
+                  <span className="bg-error absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full" />
                 )}
               </div>
             );
           })}
 
           {trades.length === 0 && (
-            <p className="mt-6 text-center text-gray-400">No trades found.</p>
+            <p className="text-foreground-dark mt-6 text-center">No trades found.</p>
           )}
         </div>
       </div>

@@ -40,13 +40,13 @@ const SettingsPage: React.FC = () => {
   const a = profile.address!;
 
   return (
-    <div className="flex flex-col items-center justify-center space-y-8 text-white">
+    <div className="flex flex-col items-center justify-center space-y-8">
       {/* SAVE BUTTON */}
       <Button onClick={save} disabled={saving} className="w-4xl disabled:opacity-50">
         {saving ? "Saving..." : "Save Settings"}
       </Button>
       {/* SETTINGS */}
-      <div className="w-4xl rounded-xl bg-slate-800 p-6 shadow">
+      <div className="w-4xl bg-slate-light rounded-xl p-6 shadow">
         <h2 className="mb-4 text-xl font-semibold">User Settings</h2>
 
         <div className="w-full space-y-3">
@@ -55,7 +55,7 @@ const SettingsPage: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium">Backsplash</p>
-                <p className="text-sm text-slate-400">{profile.settings?.backsplash}</p>
+                <p className="text-foreground-dark text-sm">{profile.settings?.backsplash}</p>
               </div>
               <Button onClick={() => setShowBksChooser(!showBksChooser)}>Change</Button>
             </div>
@@ -66,7 +66,7 @@ const SettingsPage: React.FC = () => {
                   <div
                     key={img}
                     className={`cursor-pointer overflow-hidden rounded border hover:opacity-80 ${
-                      profile.settings?.backsplash === img ? "border-blue-500" : "border-slate-700"
+                      profile.settings?.backsplash === img ? "border-primary" : "border-slate-light"
                     }`}
                     onClick={() => {
                       updateField("settings", "backsplash", img);
@@ -107,7 +107,7 @@ const SettingsPage: React.FC = () => {
       </div>
 
       {/* ADDRESS */}
-      <div className="w-4xl rounded-xl bg-slate-800 p-6 shadow">
+      <div className="w-4xl bg-slate-light rounded-xl p-6 shadow">
         <h2 className="mb-4 text-xl font-semibold">Mailing Address</h2>
 
         <div className="space-y-3">
@@ -115,7 +115,7 @@ const SettingsPage: React.FC = () => {
             <label key={field} className="block capitalize">
               <span>{field.replace("_", " ")}</span>
               <input
-                className="mt-1 w-full rounded bg-slate-700 p-2"
+                className="bg-slate-bright mt-1 w-full rounded p-2"
                 value={(a as UserAddress)[field] ?? ""}
                 onChange={(e) => updateField("address", field, e.target.value)}
               />

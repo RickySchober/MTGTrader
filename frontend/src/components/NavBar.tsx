@@ -18,10 +18,10 @@ const NavBar: React.FC = () => {
     navigate("/login");
   }
   return (
-    <div className="z-30 flex w-full items-center justify-between bg-neutral-900 px-4 py-1 text-white shadow-md">
+    <div className="bg-slate-dark z-30 flex w-full items-center justify-between px-4 py-1 shadow-md">
       {/* App Icon / Title */}
       <div onClick={() => navigate("/")} className="flex cursor-pointer items-center gap-2">
-        <h1 className="flex items-center gap-2 text-4xl font-bold text-gray-200">
+        <h1 className="flex items-center gap-2 text-4xl font-bold">
           <img src={icon} alt="M" className="inline-block h-12 w-12 object-contain" />
           <span className="-ml-1 leading-none">TGTrader</span>
         </h1>

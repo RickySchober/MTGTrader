@@ -83,13 +83,13 @@ const TradePanel: React.FC<TradePanelProps> = ({
     }));
   }
   return (
-    <div className="m-4 w-1/2 rounded-2xl bg-neutral-900 p-4 shadow-lg">
+    <div className="bg-slate-light m-4 w-1/2 rounded-2xl p-4 shadow-lg">
       <div className="flex flex-wrap justify-between">
         <div>
-          <h2 className="mb-1 text-2xl font-semibold text-white">
+          <h2 className="mb-1 text-2xl font-semibold">
             {userA ? trade.a_user.username : trade.b_user.username}
           </h2>
-          <p className="mb-4 text-gray-300">Total Value: ${offerPrice}</p>
+          <p className="text-foreground-dark mb-4">Total Value: ${offerPrice}</p>
         </div>
         <div className="flex flex-wrap items-baseline justify-between">
           {(trade.status == TradeStatus.PROPOSE || //Can only modify trade in these phases
@@ -107,7 +107,7 @@ const TradePanel: React.FC<TradePanelProps> = ({
                 active
                   ? "cursor-not-allowed bg-gray-400 text-gray-700"
                   : close
-                    ? "cursor-pointer bg-blue-400 text-white hover:bg-blue-500"
+                    ? "bg-primary hover:primary-hover cursor-pointer"
                     : "cursor-not-allowed bg-gray-400 text-gray-700"
               } `}
             >
@@ -117,13 +117,13 @@ const TradePanel: React.FC<TradePanelProps> = ({
           {close &&
             (trade.status == TradeStatus.PENDING || //Can only modify trade in these phases
               trade.status == TradeStatus.PROPOSE) && (
-              <Button className="mx-2 bg-red-600 hover:bg-red-700" onClick={close}>
+              <Button className="bg-error hover:bg-error-hover mx-2" onClick={close}>
                 Close
               </Button>
             )}
         </div>
       </div>
-      <div className={`${myOffer.length === 0 ? "" : "bg-neutral-800"} rounded-xl p-4`}>
+      <div className={`${myOffer.length === 0 ? "" : "bg-slate-bright"} rounded-xl p-4`}>
         {(trade.status == TradeStatus.PENDING || //Can only modify trade in these phases
           trade.status == TradeStatus.PROPOSE) && (
           <CardList cards={myOffer} modQuant={updateAmount} />

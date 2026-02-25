@@ -31,18 +31,18 @@ const StatusBar: React.FC<Props> = ({ status }) => {
           const isCurrent = idx === currentIndex;
 
           const circleColor = isCanceled
-            ? "bg-red-500 border-red-700"
+            ? "bg-error border-error-hover"
             : isCompleted
-              ? "bg-green-500 border-green-700"
+              ? "bg-success border-success-hover"
               : isCurrent
-                ? "bg-blue-500 border-blue-700"
-                : "bg-gray-200 border-gray-400";
+                ? "bg-primary border-primary-hover"
+                : "bg-foreground border-foreground-dark";
 
           return (
             <React.Fragment key={step}>
               {/* Circle */}
               <div
-                className={`flex h-8 w-8 items-center justify-center rounded-full border font-bold text-white ${circleColor}`}
+                className={`flex h-8 w-8 items-center justify-center rounded-full border font-bold ${circleColor}`}
               >
                 {idx + 1}
               </div>
@@ -51,7 +51,7 @@ const StatusBar: React.FC<Props> = ({ status }) => {
               {idx < TRADE_STEPS.length - 1 && (
                 <div
                   className={`h-1 flex-1 ${
-                    isCanceled ? "bg-red-300" : idx < currentIndex ? "bg-green-400" : "bg-gray-300"
+                    isCanceled ? "bg-error" : idx < currentIndex ? "bg-success" : "bg-foreground"
                   }`}
                 />
               )}
@@ -66,7 +66,7 @@ const StatusBar: React.FC<Props> = ({ status }) => {
           <div
             key={step}
             className={`flex-1 text-center ${
-              isCanceled ? "text-red-600" : step === status ? "text-blue-600" : "text-gray-600"
+              isCanceled ? "text-error" : step === status ? "text-primary" : "text-foreground-dark"
             }`}
           >
             {step.toUpperCase()}
@@ -74,7 +74,7 @@ const StatusBar: React.FC<Props> = ({ status }) => {
         ))}
       </div>
 
-      {isCanceled && <div className="mt-1 text-sm font-bold text-red-600">TRADE CANCELED</div>}
+      {isCanceled && <div className="text-error mt-1 text-sm font-bold">TRADE CANCELED</div>}
     </div>
   );
 };

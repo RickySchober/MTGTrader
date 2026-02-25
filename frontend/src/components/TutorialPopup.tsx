@@ -25,13 +25,13 @@ const MultiTutorialPopup: React.FC<MultiTutorialPopupProps> = ({ pages, keyName 
 
   return (
     showTutor && (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-        <div className="relative w-[65%] rounded-xl border border-slate-700 bg-slate-900 p-6">
-          <h2 className="pb-2 text-4xl font-bold text-blue-300">{page.title}</h2>
+      <div className="bg-slate-dark/60 fixed inset-0 z-50 flex items-center justify-center">
+        <div className="bg-slate border-slate-light relative w-[65%] rounded-xl border-2 p-6">
+          <h2 className="text-primary pb-2 text-4xl font-bold">{page.title}</h2>
           {page.image && (
-            <img src={page.image} className="mb-4 w-full rounded-md border border-slate-700" />
+            <img src={page.image} className="border-slate-light mb-4 w-full rounded-md border-2" />
           )}
-          <p className="mb-2 text-xl font-semibold leading-relaxed text-slate-200">{page.body}</p>
+          <p className="mb-2 text-xl font-semibold leading-relaxed">{page.body}</p>
 
           <div className="mt-2 flex justify-between">
             <Button
@@ -51,7 +51,7 @@ const MultiTutorialPopup: React.FC<MultiTutorialPopupProps> = ({ pages, keyName 
                 <div
                   key={i}
                   className={`h-2 w-2 rounded-full transition ${
-                    i === index ? "bg-blue-400" : "bg-slate-600"
+                    i === index ? "bg-primary" : "bg-slate-light"
                   }`}
                 />
               ))}

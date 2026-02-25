@@ -25,7 +25,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
       <select
         value={sortField}
         onChange={(e) => setSortField(e.target.value as SortOption)}
-        className="px-6 py-2 text-lg font-semibold"
+        className="bg-slate rounded-md px-5 py-2 text-lg font-semibold"
       >
         <option value={SortOption.NAME}>Name</option>
         <option value={SortOption.PRICE}>Price</option>

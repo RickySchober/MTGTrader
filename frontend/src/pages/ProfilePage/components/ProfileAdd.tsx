@@ -53,7 +53,7 @@ const ProfileAdd: React.FC<ProfileAddProps> = ({ add, haves, addOption, refreshC
             onChange={(e) => setListText(e.target.value)}
             placeholder={`Example:\n1 Lightning Bolt (STA) \n1x Artist's Talent (BLB)`}
             rows={8}
-            className="w-3/5 rounded-md border border-gray-700 bg-transparent p-2.5 text-base text-white"
+            className="bg-slate-dark border-slate-bright w-3/5 rounded-md border p-2.5 text-base"
           />
           <div className="mt-2 flex gap-2">
             <Button

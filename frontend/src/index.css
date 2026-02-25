@@ -1,108 +1,70 @@
 @import "tailwindcss";
-:root {
-  /* Typography */
+
+@theme {
   --font-sans: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  --base-line-height: 1.5;
-  --base-weight: 400;
 
-  /* Palette */
-  --bg: #0f1720; /* dark slate */
-  --surface: #111318; /* slightly lighter panel */
-  --muted-surface: #0b0d10;
-  --text: rgba(255, 255, 255, 0.92);
-  --muted: rgba(255, 255, 255, 0.65);
-  --accent: #4f7cff; /* blue accent */
-  --accent-hover: #3b66f0;
-  --success: #22c55e;
+  /* main text */
+  --color-foreground: rgba(245, 245, 244, 1);
+  --color-foreground-dark: rgba(163, 163, 163, 1);
+  --color-muted: rgba(245, 245, 244, 0.7);
 
-  /* Layout niceties */
-  --radius: 0px;
-  --control-padding: 0.5rem 0.5rem;
+  /* interactable elements use blue */
+  --color-primary: rgba(79, 124, 255, 1); /* #4f7cff */
+  --color-primary-hover: rgba(59, 102, 240, 1); /* #3b66f0 */
 
-  font-family: var(--font-sans);
-  line-height: var(--base-line-height);
-  font-weight: var(--base-weight);
+  /* green and red*/
+  --color-success: rgba(22, 163, 74, 1); /* #22c55e */
+  --color-success-hover: rgba(21, 128, 61, 1); /* #15803d */
+  --color-error: rgba(220, 38, 38, 1); /* #ef4444 */
+  --color-error-hover: rgba(185, 28, 28, 1); /* #b71c1c */
 
-  color-scheme: dark;
-  color: var(--text);
-  background-color: var(--bg);
-
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* slate colors for backgrounds and borders */
+  --color-slate: rgba(15, 23, 32, 1); /* #64748b */
+  --color-slate-dark: rgba(2, 6, 23, 1); /* #475569 */
+  --color-slate-light: rgba(30, 41, 59, 1); /* #94a3b8 */
+  --color-slate-bright: rgba(51, 65, 85, 1); /* #334155 */
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+@layer base {
+  html,
+  body,
+  #root {
+    @apply h-full;
+  }
+
+  body {
+    @apply bg-slate text-foreground font-sans text-lg font-semibold antialiased;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    @apply text-muted;
+  }
 }
 
-/* Keep body layout neutral — avoid global flex rules so component layouts aren't overridden */
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: var(--bg);
-  color: var(--text);
+/* Autofill styling overrides to match current color scheme.
+*/
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #0f172a inset !important;
+  box-shadow: 0 0 0px 1000px #0f172a inset !important;
+  -webkit-text-fill-color: #e5e7eb !important;
+  transition: background-color 5000s ease-in-out 0s !important;
 }
 
-/* Optional root container to center content without forcing all pages */
-.app-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
-}
-
-button {
-  @apply truncate rounded-sm border-0 font-semibold transition;
-}
-
-button:hover:not(:disabled) {
-  @apply -translate-y-0.5;
-}
-
-button:active:not(:disabled) {
-  @apply translate-y-0;
-}
-
-button:disabled {
-  @apply cursor-not-allowed opacity-50 grayscale;
-}
-/* Form controls */
-input,
-select,
-textarea {
-  background: var(--surface);
-  color: var(--text);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  padding: var(--control-padding);
-  border-radius: 6px;
-}
-
-input::placeholder,
-textarea::placeholder {
-  color: var(--muted);
-}
-
-/* Links */
-a {
-  color: var(--accent);
-  text-decoration: none;
-}
-a:hover {
-  color: var(--accent-hover);
-  text-decoration: underline;
-}
-
-/* Small utilities */
-.muted {
-  color: var(--muted);
-}
-.card {
-  background: linear-gradient(180deg, var(--surface), var(--muted-surface));
-  border-radius: var(--radius);
-  padding: 12px;
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+textarea:-webkit-autofill:active,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus,
+select:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px #0f172a inset !important;
+  box-shadow: 0 0 0px 1000px #0f172a inset !important;
+  -webkit-text-fill-color: #e5e7eb !important;
 }

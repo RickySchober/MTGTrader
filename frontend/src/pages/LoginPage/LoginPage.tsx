@@ -12,7 +12,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="flex min-h-[72vh] items-center justify-center">
-      <div className="card w-full max-w-lg">
+      <div className="bg-slate-light w-full max-w-lg rounded-xl p-8">
         <h2 className="mb-5 text-center text-6xl font-bold">
           {isRegister ? "Create an account" : "Login"}
         </h2>
