@@ -1,17 +1,23 @@
+import os
+import uuid
+import time
+import structlog
 from app.trades import trades
 from app.auth import auth
-from fastapi import FastAPI
 from app.cards import cards
-from fastapi.middleware.cors import CORSMiddleware
+from app.exceptions import setup_logging, error_response
 from app.database import init_db
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
-from fastapi.responses import JSONResponse
 from slowapi.middleware import SlowAPIMiddleware
-import os
-import uuid
-from fastapi import Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Request, FastAPI
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
+setup_logging()
 
 app = FastAPI(title="MTG Trader API")
 
@@ -27,6 +33,8 @@ else:
         "http://localhost:5174",
         "http://127.0.0.1:5174",
     ]
+
+app.add_middleware(SlowAPIMiddleware)
 
 app.add_middleware(
     CORSMiddleware,
@@ -45,78 +53,72 @@ async def add_request_id(request: Request, call_next):
     response.headers["X-Request-ID"] = request_id
     return response
 
-limiter = Limiter(key_func=get_remote_address)
+logger = structlog.get_logger()
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start_time = time.time()
+
+    response = await call_next(request)
+
+    duration = round((time.time() - start_time) * 1000, 2)
+
+    logger.info(
+        "request_completed",
+        method=request.method,
+        path=request.url.path,
+        status_code=response.status_code,
+        duration_ms=duration,
+        request_id=getattr(request.state, "request_id", None),
+    )
+
+    return response
+
+# Default rate limiter across app
+limiter = Limiter(
+    key_func=get_remote_address,
+    default_limits=["4/minute"]
+)
 
 app.state.limiter = limiter
 
 @app.exception_handler(RateLimitExceeded)
 async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
-    request_id = getattr(request.state, "request_id", None)
-
-    return JSONResponse(
+    return error_response(
+        request,
         status_code=429,
-        content={
-            "error": "TooManyRequests",
-            "message": "Rate limit exceeded. Please slow down.",
-            "status_code": 429,
-            "request_id": request_id,
-        },
+        error="TooManyRequests",
+        message="Rate limit exceeded. Please slow down.",
     )
-
-@app.middleware("http")
-@limiter.limit("200/minute")
-async def global_limit(request, call_next):
-    return await call_next(request)
-
-app.add_middleware(SlowAPIMiddleware)
-
-from fastapi import HTTPException, Request
-from fastapi.responses import JSONResponse
-from starlette.exceptions import HTTPException as StarletteHTTPException
-
 
 @app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(request: Request, exc: StarletteHTTPException):
-    request_id = getattr(request.state, "request_id", None)
-    return JSONResponse(
+    return error_response(
+        request,
         status_code=exc.status_code,
-        content={
-            "error": exc.__class__.__name__,
-            "message": exc.detail,
-            "status_code": exc.status_code,
-            "request_id": request_id,
-        },
+        error=exc.__class__.__name__,
+        message=str(exc.detail),
     )
-
-from fastapi.exceptions import RequestValidationError
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     first_error = exc.errors()[0]
-    request_id = getattr(request.state, "request_id", None)
-
-    return JSONResponse(
+    return error_response(
+        request,
         status_code=422,
-        content={
-            "error": "ValidationError",
-            "message": first_error["msg"],
-            "status_code": 422,
-            "request_id": request_id,
-        },
+        error="ValidationError",
+        message=first_error["msg"],
     )
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
-    request_id = getattr(request.state, "request_id", None)
-    return JSONResponse(
+    return error_response(
+        request,
         status_code=500,
-        content={
-            "error": "InternalServerError",
-            "message": "Something went wrong.",
-            "status_code": 500,
-            "request_id": request_id,
-        },
+        error="InternalServerError",
+        message="Something went wrong.",
     )
+
 @app.on_event("startup")
 async def on_startup():
     await init_db()

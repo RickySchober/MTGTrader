@@ -63,11 +63,10 @@ api.interceptors.response.use(
 
     pendingTimers.delete(cfg.requestId);
     setGlobalSlowPopup(false);
-
     const status = error.response?.status;
     const message =
       error.response?.data?.message ||
-      error.response?.data?.detail ||
+      error.response?.data?.error ||
       "Something went wrong. Please try again.";
 
     // 401 — auth expired
