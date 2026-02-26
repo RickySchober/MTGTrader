@@ -147,3 +147,8 @@ export interface CardPayload {
   quantity: number;
   intent: "have" | "want";
 }
+
+export type GlobalError = {
+  message: string;
+  status?: number;
+};
