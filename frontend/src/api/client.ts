@@ -1,5 +1,6 @@
 import axios from "axios";
 
+import { GlobalError } from "@/lib/types.js";
 declare module "axios" {
   export interface AxiosRequestConfig {
     requestId?: symbol;
@@ -8,12 +9,12 @@ declare module "axios" {
 
 // Setter functions to be registered from App component
 export let setGlobalSlowPopup: (show: boolean) => void;
-export let setGlobal404: (show: boolean) => void;
+export let setGlobalError: (error: GlobalError | null) => void;
 export const registerSlowPopupSetter = (setterFn: (show: boolean) => void) => {
   setGlobalSlowPopup = setterFn;
 };
-export const register404 = (setterFn: (show: boolean) => void) => {
-  setGlobal404 = setterFn;
+export const registerErrorSetter = (setterFn: (error: GlobalError | null) => void) => {
+  setGlobalError = setterFn;
 };
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8000";
@@ -56,19 +57,30 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    // On 401, clear token and redirect to login
-    if (error.response && error.response.status === 401) {
-      localStorage.removeItem("token");
-      window.location.href = "/login";
-    } else if (error.response && error.response.status === 404) {
-      setGlobal404(true);
-    }
     const cfg = error.config ?? {};
     const timer = pendingTimers.get(cfg.requestId);
     if (timer) clearTimeout(timer);
 
     pendingTimers.delete(cfg.requestId);
     setGlobalSlowPopup(false);
+
+    const status = error.response?.status;
+    const message =
+      error.response?.data?.message ||
+      error.response?.data?.detail ||
+      "Something went wrong. Please try again.";
+
+    // 401 — auth expired
+    if (status === 401) {
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+      return Promise.reject(error);
+    }
+
+    setGlobalError({
+      message,
+      status,
+    });
     return Promise.reject(error);
   }
 );

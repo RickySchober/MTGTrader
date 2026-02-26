@@ -2,10 +2,12 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 
-import { registerSlowPopupSetter, register404 } from "./api/client.js";
+import { registerSlowPopupSetter, registerErrorSetter } from "./api/client.js";
 
+import ErrorPopup from "@/components/ErrorPopup.js";
 import NavBar from "@/components/NavBar.js";
 import TradeProvider from "@/context/TradeProvider.js";
+import { GlobalError } from "@/lib/types.js";
 import NotFoundPage from "@/pages/404Page.js";
 import LandingPage from "@/pages/LandingPage.js";
 import LoginPage from "@/pages/LoginPage/LoginPage.js";
@@ -14,15 +16,16 @@ import SearchPage from "@/pages/SearchPage.js";
 import SettingsPage from "@/pages/SettingsPage.js";
 import TradeLog from "@/pages/TradeLogPage.js";
 import TradePage from "@/pages/TradePage/TradePage.js";
+
 export default function App() {
   const [showSlowPopup, setShowSlowPopup] = useState(false);
-  const [show404, setShow404] = useState(false);
+  const [globalError, setGlobalError] = useState<GlobalError | null>(null);
   // Allow Axios to control the popup
   registerSlowPopupSetter(setShowSlowPopup as () => boolean);
-  register404(setShow404 as () => boolean);
+  registerErrorSetter(setGlobalError as (error: GlobalError | null) => void);
   const location = useLocation();
   useEffect(() => {
-    setShow404(false);
+    setGlobalError(null);
   }, [location.pathname]);
 
   return (
@@ -37,11 +40,14 @@ export default function App() {
             </div>
           </div>
         )}
-        {show404 && (
+        {globalError?.status == 404 && (
           <div className="z-90 fixed mt-20 flex h-full w-full flex-col items-center justify-center gap-8 bg-slate-900">
             <p className="text-6xl font-medium">404 Page Not Found</p>
             <p className="text-2xl font-medium">Invalid url, trade, or card ID</p>
           </div>
+        )}
+        {globalError?.status != 404 && (
+          <ErrorPopup error={globalError} onClose={() => setGlobalError(null)} />
         )}
         <Routes>
           <Route path="/" element={<LandingPage />} />

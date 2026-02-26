@@ -1,4 +1,5 @@
 fastapi
+conda-forge::slowapi
 uvicorn
 sqlmodel
 sqlalchemy
