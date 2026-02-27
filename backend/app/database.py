@@ -8,8 +8,12 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if DATABASE_URL:
-    if DATABASE_URL.startswith("postgres+asyncpg://"):
-        DATABASE_URL = DATABASE_URL.replace("postgres+asyncpg://", "postgresql+asyncpg://", 1)
+    if DATABASE_URL.startswith("postgresql://"):
+        DATABASE_URL = DATABASE_URL.replace(
+            "postgresql://",
+            "postgresql+asyncpg://",
+            1,
+        )
 
     engine = AsyncEngine(create_engine(
         DATABASE_URL,
