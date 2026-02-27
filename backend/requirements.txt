@@ -5,6 +5,7 @@ sqlmodel
 sqlalchemy
 passlib
 asyncpg
+psycopg2
 python-dotenv
 pydantic
 bcrypt==4.3.0 #Latest version has compatibility issues
