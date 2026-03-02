@@ -77,7 +77,7 @@ async def log_requests(request: Request, call_next):
 # Default rate limiter across app
 limiter = Limiter(
     key_func=get_remote_address,
-    default_limits=["4/minute"]
+    default_limits=["100/minute"]
 )
 
 app.state.limiter = limiter

@@ -1,6 +1,6 @@
 #Trades routes manages trades between users tracking status and all items in trade
 from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import Session, select
+from sqlmodel import select
 from sqlalchemy.orm import selectinload
 from sqlmodel.ext.asyncio.session import AsyncSession
 from app.database import get_session
@@ -8,7 +8,7 @@ from app.auth.services import get_current_user
 from app.auth.models import User
 from .models import TradeOffer, TradeItem
 from .schemas import TradeOfferWrite, TradeOfferRead, TradeOfferPatch
-from .dependencies import validate_trade_users
+from .dependencies import validate_trade_users, validate_trade_participant
 from .services import check_status_update, view_trade
 from uuid import UUID
 from datetime import datetime, timezone
@@ -17,7 +17,7 @@ router = APIRouter(prefix="/trades", tags=["trades"])
 
 #Create new trade and link related trade items and users
 @router.post("/", response_model=TradeOfferRead)
-async def create_trade_offer(data: TradeOfferWrite, users: tuple = Depends(validate_trade_users), session: AsyncSession = Depends(get_session)):
+async def create_trade_offer(data: TradeOfferWrite = Depends(validate_trade_users), session: AsyncSession = Depends(get_session)):
     trade = TradeOffer(
         a_user_id=data.a_user_id,
         b_user_id=data.b_user_id,
@@ -57,19 +57,7 @@ async def create_trade_offer(data: TradeOfferWrite, users: tuple = Depends(valid
 
 # Get a single trade by its trade ID
 @router.get("/{trade_id}", response_model=TradeOfferRead)
-async def get_single_trade_offer(trade_id: UUID, session: AsyncSession = Depends(get_session)):
-    trade = (select(TradeOffer)
-            .where(TradeOffer.id == trade_id)
-            .options(
-            selectinload(TradeOffer.a_user),
-            selectinload(TradeOffer.b_user),
-            selectinload(TradeOffer.trade_items)
-                .selectinload(TradeItem.card)
-            ))
-    trade = await session.exec(trade)
-    trade = trade.one_or_none()
-    if not trade:
-        raise HTTPException(status_code=404, detail="Trade not found")
+async def get_single_trade_offer(trade: TradeOffer = Depends(validate_trade_participant)):
     return trade
 
 # Get all trades for a specific user ID
@@ -154,7 +142,7 @@ async def patch_trade_offer(trade_id: UUID, data: TradeOfferPatch, user: User = 
 
 
 @router.patch("/view/{trade_id}", response_model=TradeOfferRead)
-async def mark_trade_viewed(trade_id: UUID, user: User = Depends(get_current_user), session: AsyncSession = Depends(get_session)):
+async def mark_trade_viewed(trade_id: UUID, user: User =  Depends(get_current_user), session: AsyncSession = Depends(get_session)):
     stmt = (
         select(TradeOffer)
         .where(TradeOffer.id == trade_id)
