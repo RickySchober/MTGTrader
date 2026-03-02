@@ -15,11 +15,11 @@ export interface card {
 }
 
 export interface ScryfallPrice {
-  usd?: number;
-  usd_foil?: number;
-  usd_etched?: number;
-  eur?: number;
-  tix?: number;
+  usd?: string;
+  usd_foil?: string;
+  usd_etched?: string;
+  eur?: string;
+  tix?: string;
 }
 
 // Many of these fields are optional as Scryfall returns different fields for different cards

@@ -104,7 +104,7 @@ const SearchCard: React.FC<SearchCardProps> = ({
     const { id, ...rest } = card; //extract card info minus id
     const convertedCard: card = {
       ...rest,
-      price: card.prices?.usd || 0,
+      price: parseFloat(card.prices?.usd || "0"),
       image_url: card.image_uris?.png || "",
       intent: "have",
       quantity: 1,
